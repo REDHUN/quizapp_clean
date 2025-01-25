@@ -11,8 +11,9 @@ class TokenInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     try {
       // Skip adding token for login and other specific routes
-      if (options.path != 'login') {
-        final token = await SharedPrefs.getToken(); // Properly await the Future
+      if (options.path != '/api/auth/login') {
+        final token =
+        await SharedPrefs.getToken(); // Properly await the Future
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
@@ -25,7 +26,7 @@ class TokenInterceptor extends Interceptor {
 
   @override
   Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 403 && !_isRefreshing) {
+    if (err.response?.statusCode == 401 && !_isRefreshing) {
       _isRefreshing = true;
       try {
         final username = await SharedPrefs.getLoginUserName(); // Properly await the Future
@@ -34,14 +35,14 @@ class TokenInterceptor extends Interceptor {
         // Ensure both username and password are retrieved correctly
         if (username != null && password != null) {
           // Refresh the token
-          final newTokenResponse = await dio.post("login", data: {
+          final newTokenResponse = await dio.post("/api/auth/login", data: {
             "username": username,
             "password": password
           });
 
           if (newTokenResponse.statusCode == 200) {
-            final newToken = newTokenResponse;
-            await SharedPrefs.saveToken(newToken.toString());
+            final newToken = newTokenResponse.data['token'];
+            await SharedPrefs.saveToken(newToken);
 
             // Retry the failed request with the new token
             err.requestOptions.headers['Authorization'] = 'Bearer $newToken';

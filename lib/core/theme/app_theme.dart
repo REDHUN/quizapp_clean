@@ -1,34 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:game_app/core/theme/app_colors.dart';
-import 'package:game_app/core/theme/app_text_styles.dart';
 
 class AppTheme {
-  static ThemeData getTheme() {
+  static ThemeData get lightTheme {
     return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF6366F1),
         brightness: Brightness.light,
-        textTheme: const TextTheme(
-            bodySmall: AppTextStyles.bodySmall,
-            bodyMedium: AppTextStyles.bodyMedium,
-            bodyLarge: AppTextStyles.bodyLarge,
-            headlineSmall: AppTextStyles.headlineSmall,
-            headlineMedium: AppTextStyles.headlineMedium,
-            headlineLarge: AppTextStyles.headlineLarge),
-        colorScheme: const ColorScheme(
-            primary: AppColors.primary,
-            onPrimary: AppColors.background,
-            secondary: AppColors.secondary,
-            onSecondary: AppColors.background,
-            error: AppColors.errorColor,
-            onError: AppColors.surface,
-            surface: AppColors.background,
-            onSurface: AppColors.textColor,
-            brightness: Brightness.light),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.background,
-                elevation: 0,
-                disabledBackgroundColor: AppColors.primary.withOpacity(0.3),
-                textStyle: AppTextStyles.button)));
+      ),
+      useMaterial3: true,
+      cardTheme: CardTheme(
+        elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      textTheme: const TextTheme(
+        headlineMedium: TextStyle(
+          fontWeight: FontWeight.bold,
+          letterSpacing: -0.5,
+        ),
+        titleLarge: TextStyle(
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2,
+        ),
+      ),
+    );
+  }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF6366F1),
+        brightness: Brightness.dark,
+      ),
+      useMaterial3: true,
+      cardTheme: CardTheme(
+        elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:game_app/features/auth/domain/model/user_model.dart';
+import 'package:game_app/features/auth/domain/model/user/user_model.dart';
 
 
 enum UserStatus {

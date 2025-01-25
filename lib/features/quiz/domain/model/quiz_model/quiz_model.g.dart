@@ -7,15 +7,19 @@ part of 'quiz_model.dart';
 // **************************************************************************
 
 QuizModel _$QuizModelFromJson(Map<String, dynamic> json) => QuizModel(
-      id: (json['_id'] as num?)?.toInt(),
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       questionIds: (json['questionIds'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toList(),
+      totalQuestions: (json['totalQuestions'] as num?)?.toInt(),
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$QuizModelToJson(QuizModel instance) => <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'title': instance.title,
       'questionIds': instance.questionIds,
+      'totalQuestions': instance.totalQuestions,
+      'description': instance.description,
     };

@@ -5,7 +5,7 @@ part 'user_model.g.dart';
 
 @JsonSerializable()
 class UserModel extends Equatable {
-  @JsonKey(name: "_id")
+  @JsonKey(name: "password")
   String? password;
   bool? enabled;
   List<Authority>? authorities;

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:game_app/features/auth/domain/model/user_model.dart';
+import 'package:game_app/core/storage/shared_prefs.dart';
+import 'package:game_app/features/auth/domain/model/user/user_model.dart';
 
 class UserRemoteDataSource{
 
@@ -9,7 +10,9 @@ class UserRemoteDataSource{
 
 Future<UserModel>getUser(String userName) async{
 
-  var request=await dio.get("getUserDetails/$userName");
+  String? userId=await SharedPrefs.getUserId();
+  print("userId${userId}");
+  var request=await dio.get("api/user/$userId");
 
   return UserModel.fromJson(request.data);
 }

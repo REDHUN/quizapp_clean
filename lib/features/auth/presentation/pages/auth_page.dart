@@ -1,110 +1,148 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_app/core/router/app_router.dart';
-import 'package:game_app/core/theme/app_colors.dart';
-import 'package:game_app/core/ui/default_button.dart';
-import 'package:game_app/core/ui/default_textfield.dart';
-import 'package:game_app/features/auth/presentation/bloc/user_bloc.dart';
-import 'package:game_app/features/auth/presentation/bloc/user_event.dart';
-import 'package:game_app/features/auth/presentation/bloc/user_state.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:game_app/features/quiz/presentation/pages/home_page.dart';
+import 'package:game_app/features/auth/presentation/pages/widgets/login_form_section.dart';
+import 'package:game_app/features/auth/presentation/pages/widgets/login_header.dart';
+import 'package:game_app/features/auth/presentation/pages/widgets/signup_section.dart';
+
 
 class AuthPage extends StatefulWidget {
-  AuthPage({super.key});
+ const AuthPage({super.key});
 
   static const String route = '/auth';
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+
 
   @override
   State<AuthPage> createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _AuthPageState extends State<AuthPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
   @override
-  void dispose() {
-    widget.nameController;
-    widget.passwordController;
-    super.dispose();
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
+      ),
+    );
+
+    _controller.forward();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: BlocConsumer<UserBloc, UserState>(
-          builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Text(
-                    'Chronicle',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  const Spacer(),
-                  Expanded(child: SvgPicture.asset('assets/images/login_image.svg')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      'Collaborate with friends to craft unique stories',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                  ),
-                  DefaultTextField(
-                    controller: widget.nameController,
-                    hintText: "name",
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  DefaultTextField(
-                    controller: widget.passwordController,
-                    hintText: "password",
-                  ),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  BlocBuilder<UserBloc, UserState>(
-                    builder: (context, state) {
-                      if (state.status == UserStatus.loading) {
-                        return ElevatedButton(
-                            onPressed: null,
-                            child: CircularProgressIndicator());
-                      } else {
-                        return DefaultButton(
-                          text: 'Login',
-                          textColor: AppColors.textColor,
-                          backgroundColor: AppColors.secondary,
-                          onPressed: () {
-                            context.read<UserBloc>().add(
-                                LoginWithPassowordEvent(
-                                    password: widget.passwordController.text,
-                                    username: widget.nameController.text));
-                          },
-                        );
-                      }
-                    },
-                  )
+      body: Stack(
+        children: [
+// Animated Background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF6366F1),
+                  Color(0xFF8B5CF6),
                 ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            );
-          },
-          listener: (context, state) {
-
-
-            if (state.status == UserStatus.error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.errorMessage ?? '')));
-            }
-            else if(state.status==UserStatus.success){
-
-              AppRouter.router.go(HomePage.route);
-            }
-          },
-        ),
+            ),
+          ),
+// Animated Circles
+          Positioned(
+            top: -100,
+            right: -100,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 100,
+            left: -50,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+// Main Content
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: LoginHeader(),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              LoginForm(),
+                              SignUpSection(),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

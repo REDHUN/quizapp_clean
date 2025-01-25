@@ -32,7 +32,7 @@ void registerDataSource() {
       getIt<ApiClient>().getDio(tokenInterceptor: true);
   getIt.registerSingleton(AuthRemoteDataSource(dio: dio));
   getIt.registerSingleton(UserRemoteDataSource(dio: dioWithTokenInterceptor));
-  getIt.registerSingleton(QuizDataSource(dio: dio));
+  getIt.registerSingleton(QuizDataSource(dio: dioWithTokenInterceptor));
 }
 
 void registerRepository() {
@@ -51,4 +51,5 @@ void registerBloc() {
   getIt.registerFactory(
     () => QuizBloc(quizRepository: getIt()),
   );
+
 }

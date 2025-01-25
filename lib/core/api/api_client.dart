@@ -9,8 +9,10 @@ class ApiClient {
   Dio getDio({bool tokenInterceptor = false}) {
     Dio dio = Dio(
       BaseOptions(
+
         baseUrl: ApiConfig.baseUrl,
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json'}
+
       ),
     );
 

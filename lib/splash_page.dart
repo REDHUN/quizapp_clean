@@ -27,7 +27,7 @@ class _SplashPageState extends State<SplashPage> {
     final username = await SharedPrefs.getLoginUserName();
     final password = await SharedPrefs.getLoginUserPass();
     if (token!=null&&password!=null&&username!=null) {
-      AppRouter.router.go(HomePage.route);
+      AppRouter.router.go(HomeScreen.route);
     } else {
       AppRouter.router.go(AuthPage.route);
     }
@@ -35,9 +35,9 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.primary,
       body: Center(
-        child: Text('Chronicle',style: Theme.of(context).textTheme.headlineLarge,),
+        child: Text('Quiz App',style: TextStyle(color: AppColors.backgroundLight,fontSize: 30)),
       ),
     );
   }

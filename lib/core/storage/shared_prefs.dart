@@ -5,6 +5,7 @@ class SharedPrefs {
   static const String _usernameKey = 'username';
   static const String _loginUsernameKey = 'loginUsername';
   static const String _loginUserPassKey = 'loginUserPass';
+  static const String _userIdKey = 'userId';
 
   static late SharedPreferences _prefs;
 
@@ -27,7 +28,12 @@ class SharedPrefs {
   static Future<void> saveUsername(String username) async {
     await _prefs.setString(_usernameKey, username);
   }
-
+  static Future<void> saveUserId(String userId) async {
+    await _prefs.setString(_userIdKey, userId);
+  }
+  static Future<String?> getUserId() async {
+    return _prefs.getString(_userIdKey);
+  }
   static Future<String?> getToken() async {
     return _prefs.getString(_tokenKey);
   }
