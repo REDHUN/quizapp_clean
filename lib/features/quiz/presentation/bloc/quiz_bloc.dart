@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app/features/quiz/domain/model/quiz_ans_send_model/quiz_user_ans_model.dart';
 import 'package:game_app/features/quiz/domain/repository/quiz_repository.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_event.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_state.dart';
@@ -12,6 +13,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     on<GetQuizNextQuestionEvent>(onGetQuizNextQuestionEvent);
     on<SelectQuizAnswerEvent>(onSelectQuizAnswerEvent);
     on<GetQuizPreviousQuestionEvent>(onGetQuizPreviousQuestionEvent);
+    on<GetQuizResultEvent>(onGetQuizResultEvent);
   }
 
   Future onGetQuizEvent(GetQuizEvent event, Emitter emit) async {
@@ -76,16 +78,19 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     // Update the selectedAnswerList
     List<int> updatedSelectedOptionIndexList =
         List.from(state.selectedOptionIndexList ?? []);
-    List<int> updatedSelectedAnswerIdList =
+    List<UserAnswer> updatedSelectedAnswerIdList =
         List.from(state.selectedAnswerIdList ?? []);
     if (state.currentQuestionIndex < updatedSelectedOptionIndexList.length) {
-      updatedSelectedAnswerIdList[state.currentQuestionIndex] =
-          event.selectedAnswerId;
+      updatedSelectedAnswerIdList[state.currentQuestionIndex] = UserAnswer(
+          questionId: state.quizQuestionList?[state.currentQuestionIndex].id,
+          userAnswer: event.selectedAnswerId);
       updatedSelectedOptionIndexList[state.currentQuestionIndex] =
           event.selectedIndex;
     } else {
       updatedSelectedOptionIndexList.add(event.selectedIndex);
-      updatedSelectedAnswerIdList.add(event.selectedAnswerId);
+      updatedSelectedAnswerIdList.add(UserAnswer(
+          userAnswer: event.selectedAnswerId,
+          questionId: state.quizQuestionList?[state.currentQuestionIndex].id));
     }
 
     emit(state.copyWith(
@@ -113,6 +118,23 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         // Set to previously selected answer
         status: QuizStatus.questionLoadSuccess,
       ));
+    }
+  }
+
+  Future onGetQuizResultEvent(GetQuizResultEvent event, Emitter emit) async {
+    emit(state.copyWith(status: QuizStatus.quizResultLoading));
+    var data = await quizRepository.getQuizResult(
+        quizId: event.quizId,
+        quizAnsSendModel: event.userAnswer ?? []);
+
+    if (data.isRight()) {
+      // Emit success state with user token
+
+      emit(state.copyWith(
+          status: QuizStatus.quizResultSuccess, quizResultModel: data.right));
+    } else {
+      emit(state.copyWith(
+          status: QuizStatus.quizResultError, errorMessage: data.left.message));
     }
   }
 }

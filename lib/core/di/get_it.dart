@@ -10,6 +10,10 @@ import 'package:game_app/features/quiz/data/datasource/quiz_datasource.dart';
 import 'package:game_app/features/quiz/data/repository_impl/quiz_repository_impl.dart';
 import 'package:game_app/features/quiz/domain/repository/quiz_repository.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_bloc.dart';
+import 'package:game_app/features/quiz_report/data/datasource/quiz_report_datasource.dart';
+import 'package:game_app/features/quiz_report/data/repository_impl/quiz_report_repository_impl.dart';
+import 'package:game_app/features/quiz_report/domain/repository/quiz_report_repository.dart';
+import 'package:game_app/features/quiz_report/presentation/bloc/quiz_report_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -33,6 +37,7 @@ void registerDataSource() {
   getIt.registerSingleton(AuthRemoteDataSource(dio: dio));
   getIt.registerSingleton(UserRemoteDataSource(dio: dioWithTokenInterceptor));
   getIt.registerSingleton(QuizDataSource(dio: dioWithTokenInterceptor));
+  getIt.registerSingleton(QuizReportDataSource(dio: dioWithTokenInterceptor));
 }
 
 void registerRepository() {
@@ -42,6 +47,8 @@ void registerRepository() {
       UserRepositoryImpl(userRemoteDataSource: getIt()));
   getIt.registerSingleton<QuizRepository>(
       QuizRepositoryImpl(quizDataSource: getIt()));
+  getIt.registerSingleton<QuizReportRepository>(
+      QuizReportRepositoryImpl(quizReportDataSource: getIt()));
 }
 
 void registerBloc() {
@@ -51,5 +58,7 @@ void registerBloc() {
   getIt.registerFactory(
     () => QuizBloc(quizRepository: getIt()),
   );
-
+  getIt.registerFactory(
+    () => QuizReportBloc(quizReportRepository: getIt()),
+  );
 }

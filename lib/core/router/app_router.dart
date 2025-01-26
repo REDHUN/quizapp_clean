@@ -1,8 +1,8 @@
+
 import 'package:game_app/features/auth/presentation/pages/auth_page.dart';
 import 'package:game_app/features/quiz/presentation/pages/home_page.dart';
 import 'package:game_app/features/quiz/presentation/pages/quiz/quiz_screen.dart';
-import 'package:game_app/features/quiz/presentation/pages/quiz_attend_page/quiz_attend_page.dart';
-import 'package:game_app/features/quiz/presentation/pages/quiz_result_page/quiz_result_page.dart';
+import 'package:game_app/features/quiz_report/presentation/pages/quiz_report/quiz_history_screen.dart';
 import 'package:game_app/splash_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,20 +27,17 @@ class AppRouter {
       },
     ),
     GoRoute(
-
       path: QuizScreen.route,
-
       builder: (context, state) {
         final quizId = state.pathParameters['quizId'];
-        return QuizScreen(quizId: "1");
+        return QuizScreen(quizId: quizId!);
       },
     ),
     GoRoute(
-      path: QuizResultPage.route,
-
+      path: QuizHistoryScreen.route,
       builder: (context, state) {
-        return QuizResultPage();
+        return QuizHistoryScreen();
       },
-    )
+    ),
   ]);
 }

@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:game_app/features/auth/domain/model/user/user_model.dart';
+import 'package:game_app/features/quiz/domain/model/quiz_ans_send_model/quiz_user_ans_model.dart';
 import 'package:game_app/features/quiz/domain/model/quiz_model/quiz_model.dart';
 import 'package:game_app/features/quiz/domain/model/quiz_question_model/quiz_question_model.dart';
+import 'package:game_app/features/quiz/domain/model/quiz_result_model/quiz_result_model.dart';
 
 enum QuizStatus {
   initial,
@@ -12,7 +14,9 @@ enum QuizStatus {
   questionLoadSuccess,
   questionLoadError,
   questionCompleted,
-  questionSelected,
+  quizResultLoading,
+  quizResultSuccess,
+  quizResultError,
 }
 
 class QuizState extends Equatable {
@@ -22,8 +26,9 @@ class QuizState extends Equatable {
   final List<QuizQuestionModel>? quizQuestionList;
   final int currentQuestionIndex;
  int ? selectedIndex;
- final List<int> ? selectedAnswerIdList;
+ final List<UserAnswer> ? selectedAnswerIdList;
   final List<int> ? selectedOptionIndexList;
+  final QuizResultModel  ? quizResultModel;
 
  QuizState._(
       {required this.status,
@@ -33,6 +38,7 @@ class QuizState extends Equatable {
         this.selectedIndex,
         this.selectedAnswerIdList,
         this.selectedOptionIndexList,
+        this.quizResultModel,
       this.currentQuestionIndex = 0});
 
   factory QuizState.initial() => QuizState._(status: QuizStatus.initial);
@@ -41,15 +47,17 @@ class QuizState extends Equatable {
     QuizStatus? status,
     String? errorMessage,
     List<QuizModel>? quizModel,
+   QuizResultModel  ? quizResultModel,
     List<QuizQuestionModel>? quizQuestionList,
     int? selectedIndex,
-    List<int>? selectedAnswerIdList,
+    List<UserAnswer>? selectedAnswerIdList,
     final List<int> ? selectedOptionIndexList,
     int? currentQuestionIndex,
   }) {
     return QuizState._(
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
+      quizResultModel: quizResultModel?? this.quizResultModel,
       quizModel: quizModel ?? this.quizModel,
       quizQuestionList: quizQuestionList ?? this.quizQuestionList,
       selectedIndex: selectedIndex , // Fixed

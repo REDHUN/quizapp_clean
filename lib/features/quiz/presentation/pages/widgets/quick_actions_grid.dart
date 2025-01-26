@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:game_app/core/router/app_router.dart';
+import 'package:game_app/core/theme/app_colors.dart';
 
 class QuickActionsGrid extends StatelessWidget {
   const QuickActionsGrid({super.key});
@@ -35,11 +37,23 @@ class QuickActionsGrid extends StatelessWidget {
         ),
         _buildActionCard(
           context,
-          'Multiplayer',
-          Icons.groups_rounded,
+          'Reports',
+          Icons.assessment_rounded,
           const Color(0xFFF59E0B),
-          () {},
+              () {
+                AppRouter.router.push('/quizResultList');
+
+          },
         ),
+        // _buildActionCard(
+        //   context,
+        //   'Multiplayer',
+        //   Icons.groups_rounded,
+        //   const Color(0xFFF59E0B),
+        //   () {},
+        // ),
+
+
       ],
     );
   }

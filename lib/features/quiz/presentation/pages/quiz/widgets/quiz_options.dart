@@ -18,66 +18,152 @@ class QuizOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("QuizOptions Rebuilt - Selected Index: $selectedIndex"); // Debugging
-    return ListView.separated(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: options.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final isSelected = selectedIndex == index;
-        return InkWell(
-          onTap: () => onOptionSelected(index),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isSelected ? AppColors.primary : Colors.grey[300]!,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              color: isSelected ? AppColors.primary.withOpacity(0.1) : null,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected ? AppColors.primary : Colors.grey[400]!,
-                      width: 2,
+      child: Column(
+        children: List.generate(
+          options.length,
+              (index) {
+            final isSelected = selectedIndex == index;
+            final option = options[index];
+            final letter = String.fromCharCode(65 + index); // A, B, C, D...
+
+            return TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: Duration(milliseconds: 200 + (index * 100)),
+              builder: (context, value, child) {
+                return Transform.translate(
+                  offset: Offset(0, 20 * (1 - value)),
+                  child: Opacity(
+                    opacity: value,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => onOptionSelected(index),
+                          borderRadius: BorderRadius.circular(20),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 20,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : Colors.grey[200]!,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              color: isSelected
+                                  ? AppColors.primary.withOpacity(0.05)
+                                  : Colors.white,
+                              boxShadow: [
+                                if (isSelected)
+                                  BoxShadow(
+                                    color: AppColors.primary.withOpacity(0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  )
+                                else
+                                  BoxShadow(
+                                    color: Colors.grey[200]!,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : Colors.grey[100],
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? AppColors.primary
+                                          : Colors.grey[300]!,
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      if (isSelected)
+                                        BoxShadow(
+                                          color: AppColors.primary
+                                              .withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: isSelected
+                                        ? const Icon(
+                                      Icons.check_rounded,
+                                      size: 24,
+                                      color: Colors.white,
+                                    )
+                                        : Text(
+                                      letter,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.grey[600],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Text(
+                                    option.text??"",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      height: 1.2,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? AppColors.primary
+                                          : Colors.grey[800],
+                                    ),
+                                  ),
+                                ),
+                                if (isSelected) ...[
+                                  const SizedBox(width: 12),
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary.withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.check_circle_rounded,
+                                      color: AppColors.primary,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    color: isSelected ? AppColors.primary : Colors.transparent,
                   ),
-                  child: isSelected
-                      ? const Icon(
-                          Icons.check,
-                          size: 16,
-                          color: Colors.white,
-                        )
-                      : null,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    options[index].text??"",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? AppColors.primary : Colors.black87,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

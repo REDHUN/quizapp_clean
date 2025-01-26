@@ -7,6 +7,7 @@ import 'package:game_app/core/storage/shared_prefs.dart';
 import 'package:game_app/core/theme/app_theme.dart';
 import 'package:game_app/features/auth/presentation/bloc/user_bloc.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_bloc.dart';
+import 'package:game_app/features/quiz_report/presentation/bloc/quiz_report_bloc.dart';
 import 'package:game_app/firebase_options.dart';
 
 void main() async {
@@ -22,6 +23,9 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => getIt<QuizBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<QuizReportBloc>(),
         ),
       ],
       child: MaterialApp.router(

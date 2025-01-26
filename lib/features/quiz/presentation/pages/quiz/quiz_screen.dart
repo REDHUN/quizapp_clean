@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,8 @@ import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_bloc.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_event.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz_state.dart';
+import 'package:game_app/features/quiz/presentation/pages/quiz/widgets/quiz_screen_shimmer.dart';
+import 'package:game_app/features/quiz/presentation/pages/quiz/widgets/result_screen.dart';
 
 import 'widgets/quiz_options.dart';
 import 'widgets/quiz_progress_bar.dart';
@@ -54,29 +58,33 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           getIt<QuizBloc>()..add(GetQuizQuestionsEvent(quizId: widget.quizId)),
       child: Scaffold(
         backgroundColor: AppColors.primary,
-        body: FadeTransition(
-          opacity: _fadeController,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
-            child: SafeArea(
-              child: BlocBuilder<QuizBloc, QuizState>(
-                builder: (context, state) {
-                  print(state.selectedIndex);
-                  if (state.status == QuizStatus.questionLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.status == QuizStatus.questionLoadError) {
-                    return const Center(
-                        child: Text("Failed to load questions"));
-                  } else if (state.status == QuizStatus.questionLoadSuccess &&
-                      state.quizQuestionList != null) {
-                    return Column(
+        body: BlocBuilder<QuizBloc, QuizState>(
+          builder: (context, state) {
+            if (state.status == QuizStatus.questionLoading) {
+              return const Center(child: QuizScreenShimmer());
+            } else if (state.status == QuizStatus.quizResultError) {
+              return Center(child: Text(state.errorMessage.toString()));
+            } else {
+              return FadeTransition(
+                opacity: _fadeController,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                  ),
+                  child: SafeArea(
+                    child: Column(
                       children: [
                         _buildAppBar(),
-                        QuizProgressBar(
-                          currentQuestion: state.currentQuestionIndex + 1,
-                          totalQuestions: state.quizQuestionList!.length,
+                        // Progress Bar (rebuilds only when current question index changes)
+                        BlocSelector<QuizBloc, QuizState, int>(
+                          selector: (state) => state.currentQuestionIndex,
+                          builder: (context, currentQuestionIndex) {
+                            return QuizProgressBar(
+                              currentQuestion: currentQuestionIndex + 1,
+                              totalQuestions:
+                                  state.quizQuestionList?.length ?? 0,
+                            );
+                          },
                         ),
                         const SizedBox(height: 24),
                         Expanded(
@@ -91,36 +99,50 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                               physics: const BouncingScrollPhysics(),
                               child: Column(
                                 children: [
-                                  QuizQuestionCard(
-                                    questionNumber:
-                                        state.currentQuestionIndex + 1,
-                                    question: state
-                                            .quizQuestionList![
-                                                state.currentQuestionIndex]
-                                            .question ??
-                                        "",
-                                    imageUrl:
-                                        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34',
+                                  // Question Card (rebuilds only when current question changes)
+                                  BlocSelector<QuizBloc, QuizState, int>(
+                                    selector: (state) =>
+                                        state.currentQuestionIndex,
+                                    builder: (context, currentQuestionIndex) {
+                                      return QuizQuestionCard(
+                                        questionNumber:
+                                            currentQuestionIndex + 1,
+                                        question: state
+                                                .quizQuestionList?[
+                                                    currentQuestionIndex]
+                                                .question ??
+                                            "",
+                                        imageUrl:
+                                            'https://images.unsplash.com/photo-1502602898657-3e91760cbb34',
+                                      );
+                                    },
                                   ),
                                   const SizedBox(height: 20),
-                                  QuizOptions(
-                                    options: state
-                                            .quizQuestionList![
-                                                state.currentQuestionIndex]
-                                            .options ??
-                                        [],
-                                    selectedIndex: state.selectedIndex,
-                                    onOptionSelected: (index) {
-                                      context.read<QuizBloc>().add(
-                                            SelectQuizAnswerEvent(
-                                                selectedIndex: index,
-                                                selectedAnswerId: state
-                                                        .quizQuestionList?[state
-                                                            .currentQuestionIndex]
-                                                        .options?[index]
-                                                        .id ??
-                                                    0),
-                                          );
+                                  // Quiz Options (rebuilds only when selected index changes)
+                                  BlocSelector<QuizBloc, QuizState, int?>(
+                                    selector: (state) => state.selectedIndex,
+                                    builder: (context, selectedIndex) {
+                                      return QuizOptions(
+                                        options: state
+                                                .quizQuestionList?[
+                                                    state.currentQuestionIndex]
+                                                .options ??
+                                            [],
+                                        selectedIndex: selectedIndex,
+                                        onOptionSelected: (index) {
+                                          context.read<QuizBloc>().add(
+                                                SelectQuizAnswerEvent(
+                                                  selectedIndex: index,
+                                                  selectedAnswerId: state
+                                                          .quizQuestionList?[state
+                                                              .currentQuestionIndex]
+                                                          .options?[index]
+                                                          .id ??
+                                                      0,
+                                                ),
+                                              );
+                                        },
+                                      );
                                     },
                                   ),
                                   const SizedBox(height: 100),
@@ -130,18 +152,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           ),
                         ),
                       ],
-                    );
-                  } else if (state.status == QuizStatus.questionCompleted) {
-                    return const Center(child: Text("Quiz Completed!"));
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
-            ),
-          ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
         ),
-        bottomSheet: _buildBottomButtons(context),
+        bottomSheet: _buildBottomButtons(context, int.parse(widget.quizId)),
       ),
     );
   }
@@ -232,12 +250,23 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildBottomButtons(BuildContext context) {
-    return BlocBuilder<QuizBloc, QuizState>(
+  Widget _buildBottomButtons(BuildContext context, int quizId) {
+    return BlocConsumer<QuizBloc, QuizState>(
+      listener: (context, state) {
+        if (state.status == QuizStatus.quizResultSuccess) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return QuizResultScreen(quizResultModel: state.quizResultModel!);
+          }));
+
+          //  final quizResultModelJson = jsonEncode(state.quizResultModel!.toJson());
+          //   AppRouter.router.push('/quizResultPage${state.quizResultModel}');
+        }
+      },
       builder: (context, state) {
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
@@ -263,27 +292,43 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           isOutlined: true,
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: _buildNavigationButton(
-                    icon: Icons.arrow_forward_rounded,
-                    label:state.quizQuestionList?.length !=
-                        state.currentQuestionIndex + 1? 'Next':'Submit',
-                    onPressed: state.selectedIndex != null
-                        ? () {
-                            if (state.quizQuestionList?.length !=
-                                state.currentQuestionIndex + 1) {
-                              context.read<QuizBloc>().add(
-                                    GetQuizNextQuestionEvent(),
-                                  );
-                            } else {
-                              print("Updated Selected Answer List: ${state.selectedAnswerIdList}");
-                            }
-                          }
-                        : null,
-                    isOutlined: false,
-                  ),
+                // Submit Button (rebuilds only when status changes)
+                BlocSelector<QuizBloc, QuizState, QuizStatus>(
+                  selector: (state) => state.status,
+                  builder: (context, status) {
+                    return Expanded(
+                      child: _buildNavigationButton(
+                        icon: Icons.arrow_forward_rounded,
+                        label: state.quizQuestionList?.length !=
+                                state.currentQuestionIndex + 1
+                            ? 'Next'
+                            : status == QuizStatus.quizResultLoading
+                                ? "Submitting"
+                                : 'Submit',
+                        onPressed: state.selectedIndex != null
+                            ? () {
+                                if (state.quizQuestionList?.length !=
+                                    state.currentQuestionIndex + 1) {
+                                  context.read<QuizBloc>().add(
+                                        GetQuizNextQuestionEvent(),
+                                      );
+                                } else {
+                                  context.read<QuizBloc>().add(
+                                        GetQuizResultEvent(
+                                          quizId: quizId,
+                                          userAnswer:
+                                              state.selectedAnswerIdList ?? [],
+                                        ),
+                                      );
+                                }
+                              }
+                            : null,
+                        isOutlined: false,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

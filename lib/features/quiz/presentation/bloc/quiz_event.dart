@@ -1,3 +1,5 @@
+import 'package:game_app/features/quiz/domain/model/quiz_ans_send_model/quiz_user_ans_model.dart';
+
 abstract class QuizEvent {}
 
 class GetQuizEvent extends QuizEvent {
@@ -19,3 +21,11 @@ class  SelectQuizAnswerEvent extends QuizEvent{
 }
 
 class GetQuizPreviousQuestionEvent extends QuizEvent {}
+
+class GetQuizResultEvent extends QuizEvent {
+  int quizId;
+  List <UserAnswer> userAnswer;
+
+  GetQuizResultEvent({required this.quizId,required this.userAnswer});
+
+}
