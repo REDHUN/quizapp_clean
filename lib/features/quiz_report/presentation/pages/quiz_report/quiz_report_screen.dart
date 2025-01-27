@@ -21,16 +21,19 @@ class QuizReportScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
+          gradient: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkGradient
+              : AppColors.primaryGradient,
         ),
         child: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               const ReportAppBar(),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration:  BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(30),
                     ),

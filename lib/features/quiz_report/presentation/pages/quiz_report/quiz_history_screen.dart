@@ -21,9 +21,12 @@ class QuizHistoryScreen extends StatelessWidget {
   child: Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
+          gradient: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkGradient
+              : AppColors.primaryGradient,
         ),
         child: SafeArea(
+          bottom: false,
           child: 
           
           BlocBuilder<QuizReportBloc, QuizReportState>(
@@ -47,15 +50,15 @@ class QuizHistoryScreen extends StatelessWidget {
                       child: state.quizResultList?.isEmpty??true
                           ? _buildEmptyState()
                           : Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
+                              decoration:  BoxDecoration(
+                                color: Theme.of(context).scaffoldBackgroundColor,
                                 borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(30),
                                 ),
                               ),
                               child: Column(
                                 children: [
-                                  _buildHeader(),
+                                  _buildHeader(context),
                                   Expanded(
                                     child: ListView.builder(
                                       padding: const EdgeInsets.all(20),
@@ -85,7 +88,7 @@ class QuizHistoryScreen extends StatelessWidget {
 );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -94,7 +97,7 @@ class QuizHistoryScreen extends StatelessWidget {
             height: 4,
             width: 40,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Theme.of(context).colorScheme.onBackground,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -434,19 +437,19 @@ class AnimatedQuizHistoryItem extends StatelessWidget {
     final score = quiz?.score??0;
     final color = _getScoreColor(score);
 
-    return Container(
+    return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //
+      //   borderRadius: BorderRadius.circular(20),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: color.withOpacity(0.1),
+        //     blurRadius: 10,
+        //     offset: const Offset(0, 4),
+        //   ),
+        // ],
+    //  ),
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
@@ -528,7 +531,7 @@ class AnimatedQuizHistoryItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(

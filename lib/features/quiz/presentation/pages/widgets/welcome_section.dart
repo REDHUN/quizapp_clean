@@ -5,129 +5,148 @@ class WelcomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15,),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFF6366F1),
-            Color(0xFF8B5CF6),
+        gradient: LinearGradient(
+          colors: isDark
+              ? const [
+            Color(0xFF1A1F38), // Dark Blue
+            Color(0xFF2C3E50), // Dark Slate
+          ]
+              : const [
+            Color(0xFF845EC2), // Rich Purple
+            Color(0xFF2C73D2), // Deep Blue
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
+          stops: const [0.2, 0.9],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6366F1).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: (isDark ? Colors.black : const Color(0xFF845EC2))
+                .withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
+        border: isDark
+            ? Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        )
+            : null,
       ),
-      child: Card(
-        elevation: 0,
-        color: Colors.transparent,
-        child: Padding(
-          padding: const EdgeInsets.all(28.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(
-                      Icons.emoji_events_rounded,
+                  const Text(
+                    'Welcome back!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      size: 32,
+                      letterSpacing: 0.3,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome Back!',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      Text(
-                        'Ready for your next challenge?',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 8),
+                  Text(
+                    'Ready for today\'s challenge?',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.9),
+                      letterSpacing: 0.2,
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  _buildStatCard('Rank', '#42', Icons.leaderboard_rounded),
-                  const SizedBox(width: 16),
-                  _buildStatCard('Points', '2.5K', Icons.stars_rounded),
-                ],
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
+                  borderRadius: BorderRadius.circular(16),
+                  border: isDark
+                      ? Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
+                  )
+                      : null,
+                ),
+                child: Icon(
+                  Icons.emoji_events_rounded,
+                  color: Colors.white.withOpacity(isDark ? 0.9 : 1),
+                  size: 32,
+                ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(isDark ? 0.1 : 0.15),
+              borderRadius: BorderRadius.circular(12),
+              border: isDark
+                  ? Border.all(
+                color: Colors.white.withOpacity(0.1),
+                width: 1,
+              )
+                  : null,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildStat('Quizzes', '12', isDark),
+                _buildDivider(isDark),
+                _buildStat('Correct', '85%', isDark),
+                _buildDivider(isDark),
+                _buildStat('Streak', '5 days', isDark),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.2),
-            width: 1,
+  Widget _buildStat(String label, String value, bool isDark) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white.withOpacity(isDark ? 0.9 : 1),
           ),
         ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: Colors.white70,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.white.withOpacity(isDark ? 0.7 : 0.8),
+          ),
         ),
-      ),
+      ],
+    );
+  }
+
+  Widget _buildDivider(bool isDark) {
+    return Container(
+      height: 24,
+      width: 1,
+      color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
     );
   }
 }

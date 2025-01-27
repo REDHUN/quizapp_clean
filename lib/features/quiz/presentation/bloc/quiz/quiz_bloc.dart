@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app/features/quiz/domain/model/quiz_ans_send_model/quiz_user_ans_model.dart';
 import 'package:game_app/features/quiz/domain/repository/quiz_repository.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_event.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_state.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_event.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_state.dart';
 
 class QuizBloc extends Bloc<QuizEvent, QuizState> {
   final QuizRepository quizRepository;

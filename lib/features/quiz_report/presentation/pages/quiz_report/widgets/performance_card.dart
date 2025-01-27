@@ -22,7 +22,9 @@ class PerformanceCard extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
+        gradient: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkGradient
+            : AppColors.primaryGradient,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(

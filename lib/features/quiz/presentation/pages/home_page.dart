@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app/core/di/get_it.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_bloc.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_event.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_state.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_bloc.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_event.dart';
+
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_state.dart';
+import 'package:game_app/features/quiz/presentation/pages/drawer/app_drawer.dart';
 import 'package:game_app/features/quiz/presentation/pages/shimmer/home_screen_shimmer.dart';
 import 'package:game_app/features/quiz/presentation/pages/widgets/custom_app_bar.dart';
 import 'package:game_app/features/quiz/presentation/pages/widgets/leaderboard.dart';
@@ -25,6 +27,7 @@ class HomeScreen extends StatelessWidget {
       getIt<QuizBloc>()
         ..add(GetQuizEvent()),
       child: Scaffold(
+        drawer: AppDrawer(),
         body: BlocBuilder<QuizBloc, QuizState>(
           builder: (context, state) {
             if (state.status == QuizStatus.loading) {
@@ -39,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                 slivers: [
                   const CustomAppBar(),
                   SliverPadding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(11.0),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
 

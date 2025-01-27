@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app/core/di/get_it.dart';
 import 'package:game_app/core/theme/app_colors.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_bloc.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_event.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz_state.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_bloc.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_event.dart';
+import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_state.dart';
 import 'package:game_app/features/quiz/presentation/pages/quiz/widgets/quiz_screen_shimmer.dart';
 import 'package:game_app/features/quiz/presentation/pages/quiz/widgets/result_screen.dart';
 

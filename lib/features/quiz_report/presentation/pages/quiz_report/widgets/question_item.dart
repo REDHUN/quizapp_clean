@@ -16,40 +16,43 @@ class QuestionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCorrect = question?.userAnswer==question?.correctAnswer;
-    return Container(
+    return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isCorrect
-              ? AppColors.success.withOpacity(0.2)
-              : AppColors.error.withOpacity(0.2),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[100]!,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildQuestionHeader(isCorrect),
-          const SizedBox(height: 12),
-          Text(
-           question?.question??"",
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+      // padding: const EdgeInsets.all(16),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(16),
+      //   border: Border.all(
+      //     color: isCorrect
+      //         ? AppColors.success.withOpacity(0.2)
+      //         : AppColors.error.withOpacity(0.2),
+      //   ),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.grey[100]!,
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 2),
+      //     ),
+      //   ],
+      // ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildQuestionHeader(isCorrect),
+            const SizedBox(height: 12),
+            Text(
+             question?.question??"",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          _buildAnswerSection(isCorrect),
-        ],
+            const SizedBox(height: 16),
+            _buildAnswerSection(isCorrect),
+          ],
+        ),
       ),
     );
   }
@@ -89,13 +92,15 @@ class QuestionItem extends StatelessWidget {
                               isCorrect ? AppColors.success : AppColors.error,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          question?.userAnswer??"",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                isCorrect ? AppColors.success : AppColors.error,
+                        Expanded(
+                          child: Text(
+                            question?.userAnswer??"",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color:
+                                  isCorrect ? AppColors.success : AppColors.error,
+                            ),
                           ),
                         ),
                       ],
@@ -130,12 +135,15 @@ class QuestionItem extends StatelessWidget {
                             color: AppColors.success,
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            question?.correctAnswer??"",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.success,
+                          Expanded(
+                            child: Text(
+                              
+                              question?.correctAnswer??"",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.success,
+                              ),
                             ),
                           ),
                         ],
