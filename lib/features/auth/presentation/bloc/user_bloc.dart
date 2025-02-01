@@ -14,6 +14,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoginWithPassowordEvent>(onLoginWithUserPasswordEvent);
     on<GetUserDetailsEvent>(onGetUserDetailsEvent);
     on<UserLogoutEvent>(onUserLogoutEvent);
+    on<LoadUserRoles>(_onLoadUserRoles);
   }
 
   Future onLoginWithUserPasswordEvent(
@@ -61,6 +62,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (e) {
       emit(
           state.copyWith(status: UserStatus.error, errorMessage: e.toString()));
+    }
+  }
+  Future<void> _onLoadUserRoles(
+      LoadUserRoles event, Emitter<UserState> emit) async {
+    emit(state.copyWith(status: UserStatus.initial));
+    try {
+
+      emit(state.copyWith(status: UserStatus.loading));
+      await SharedPrefs.init();
+      final roles = await SharedPrefs.getRoles();
+      final isAdmin = roles?.contains('ROLE_ADMIN') ?? false;
+      emit(state.copyWith(userRoles: roles, isAdmin: isAdmin, status: UserStatus.success));
+
+    } catch (_) {
+      emit(state.copyWith(status: UserStatus.error));
     }
   }
 }

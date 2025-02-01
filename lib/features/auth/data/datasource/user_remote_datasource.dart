@@ -8,11 +8,9 @@ class UserRemoteDataSource{
 
   UserRemoteDataSource({required this.dio});
 
-Future<UserModel>getUser(String userName) async{
+Future<UserModel>getUser() async{
 
-  String? userId=await SharedPrefs.getUserId();
-  print("userId${userId}");
-  var request=await dio.get("api/user/$userId");
+  var request=await dio.get("api/auth/getUserDetails");
 
   return UserModel.fromJson(request.data);
 }

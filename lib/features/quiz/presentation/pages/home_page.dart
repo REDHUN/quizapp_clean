@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app/core/di/get_it.dart';
+import 'package:game_app/features/auth/presentation/bloc/user_bloc.dart';
+import 'package:game_app/features/auth/presentation/bloc/user_event.dart';
+import 'package:game_app/features/auth/presentation/bloc/user_state.dart';
 import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_bloc.dart';
-import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_event.dart';
-
 import 'package:game_app/features/quiz/presentation/bloc/quiz/quiz_state.dart';
+import 'package:game_app/features/quiz/presentation/pages/admin/admin_screen.dart';
 import 'package:game_app/features/quiz/presentation/pages/drawer/app_drawer.dart';
 import 'package:game_app/features/quiz/presentation/pages/shimmer/home_screen_shimmer.dart';
+import 'package:game_app/features/quiz/presentation/pages/user/user_home_page.dart';
 import 'package:game_app/features/quiz/presentation/pages/widgets/custom_app_bar.dart';
-import 'package:game_app/features/quiz/presentation/pages/widgets/leaderboard.dart';
-import 'package:game_app/features/quiz/presentation/pages/widgets/popular_quizzes.dart';
-import 'package:game_app/features/quiz/presentation/pages/widgets/quick_actions_grid.dart';
-import 'package:game_app/features/quiz/presentation/pages/widgets/start_quiz_fab.dart';
-import 'package:game_app/features/quiz/presentation/pages/widgets/welcome_section.dart';
-
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,59 +19,66 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-      getIt<QuizBloc>()
-        ..add(GetQuizEvent()),
-      child: Scaffold(
-        drawer: AppDrawer(),
-        body: BlocBuilder<QuizBloc, QuizState>(
-          builder: (context, state) {
-            if (state.status == QuizStatus.loading) {
-              return
-                HomeScreenShimmer();
-            }
-            if (state.status == QuizStatus.error) {
-              return
-                Text(state.errorMessage.toString());
-            } else {
-              return CustomScrollView(
-                slivers: [
-                  const CustomAppBar(),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(11.0),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
+    return Scaffold(
+      drawer: AppDrawer(),
+      body: BlocProvider(
+        create: (context) =>
+        getIt<UserBloc>()
+          ..add(LoadUserRoles()),
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, userState) {
+            if (userState.status == UserStatus.loading) {
+              return CircularProgressIndicator();
+            } else if(userState.status == UserStatus.success) {
+              return BlocBuilder<QuizBloc, QuizState>(
+                builder: (context, state) {
+                  if(state.status==QuizStatus.loading){
+                    return HomeScreenShimmer();
+                  }
+                  else{
+                    return
 
-                        const WelcomeSection(),
-                        const SizedBox(height: 24),
-                        const QuickActionsGrid(),
-                        const SizedBox(height: 24),
-                        PopularQuizzes(
-                          quizList: state.quizModel ?? [],
-                        ),
-                        const SizedBox(height: 24),
-                        const Leaderboard(),
-                        const SizedBox(height: 80), // Space for FAB
-                      ]),
-                    ),
-                  ),
-                ],
+                      CustomScrollView(
+                        slivers: [
+                          const CustomAppBar(),
+                          SliverPadding(
+                            padding: const EdgeInsets.all(11.0),
+                            sliver: SliverList(
+                              delegate: SliverChildListDelegate([
+                                Column(
+                                  children: [
+                                     (userState.isAdmin)?
+
+                                    AdminScreen()
+                                        :
+                                    UserHomeScreen(),
+                                  ],
+                                ),
+                              ]),
+                            ),
+                          ),
+                        ],
+                      );
+                  }
+
+                },
               );
             }
-          },
-        ),
-        floatingActionButton: BlocBuilder<QuizBloc, QuizState>(
-          builder: (context, state) {
-            if (state.status == QuizStatus.loading) {
-              return SizedBox.shrink();
-            } else {
-              return StartQuizFAB();
+            else{
+              return Container();
             }
           },
         ),
-
       ),
+      // floatingActionButton: BlocBuilder<QuizBloc, QuizState>(
+      //   builder: (context, state) {
+      //     if (state.status == QuizStatus.loading) {
+      //       return SizedBox.shrink();
+      //     } else {
+      //       return StartQuizFAB();
+      //     }
+      //   },
+      // ),
     );
   }
 }

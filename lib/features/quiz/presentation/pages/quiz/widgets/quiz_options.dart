@@ -18,6 +18,7 @@ class QuizOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -53,21 +54,23 @@ class QuizOptions extends StatelessWidget {
                               border: Border.all(
                                 color: isSelected
                                     ? AppColors.primary
-                                    : Colors.grey[200]!,
+                                    : Theme.of(context).dividerColor.withOpacity(0.1),
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(20),
                               color: isSelected
-                                  ? AppColors.primary.withOpacity(0.05)
-                                  : Colors.white,
+                                  ? AppColors.primary
+                                  .withOpacity(isDark ? 0.15 : 0.05)
+                                  : Theme.of(context).cardColor,
                               boxShadow: [
                                 if (isSelected)
                                   BoxShadow(
-                                    color: AppColors.primary.withOpacity(0.15),
+                                    color: AppColors.primary
+                                        .withOpacity(isDark ? 0.3 : 0.15),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   )
-                                else
+                                else if (!isDark)
                                   BoxShadow(
                                     color: Colors.grey[200]!,
                                     blurRadius: 8,
@@ -84,10 +87,14 @@ class QuizOptions extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: isSelected
                                         ? AppColors.primary
+                                        : isDark
+                                        ? Colors.grey[800]
                                         : Colors.grey[100],
                                     border: Border.all(
                                       color: isSelected
                                           ? AppColors.primary
+                                          : isDark
+                                          ? Colors.grey[700]!
                                           : Colors.grey[300]!,
                                       width: 2,
                                     ),
@@ -95,7 +102,7 @@ class QuizOptions extends StatelessWidget {
                                       if (isSelected)
                                         BoxShadow(
                                           color: AppColors.primary
-                                              .withOpacity(0.3),
+                                              .withOpacity(isDark ? 0.4 : 0.3),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
@@ -114,8 +121,10 @@ class QuizOptions extends StatelessWidget {
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: isSelected
-                                            ? Colors.white
-                                            : Colors.grey[600],
+                                            ? AppColors.primary
+                                            : Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
                                       ),
                                     ),
                                   ),
@@ -132,7 +141,9 @@ class QuizOptions extends StatelessWidget {
                                           : FontWeight.w500,
                                       color: isSelected
                                           ? AppColors.primary
-                                          : Colors.grey[800],
+                                          : Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
                                     ),
                                   ),
                                 ),

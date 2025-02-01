@@ -16,3 +16,4 @@ class GetUserDetailsEvent extends UserEvent {
 class UserLogoutEvent extends UserEvent {
   UserLogoutEvent();
 }
+class LoadUserRoles extends UserEvent {}

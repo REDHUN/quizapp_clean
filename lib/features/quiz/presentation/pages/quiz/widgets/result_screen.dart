@@ -73,12 +73,16 @@ class _QuizResultScreenState extends State<QuizResultScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      backgroundColor: AppColors.primary,
       body: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
+              gradient: isDark
+                  ? AppColors.darkGradient
+                  : AppColors.primaryGradient,
             ),
             child: SafeArea(
               child: Column(
@@ -90,7 +94,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
                         width: double.infinity,
                         margin: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color:  Theme.of(context).scaffoldBackgroundColor,
                           borderRadius: BorderRadius.circular(30),
                           boxShadow: [
                             BoxShadow(

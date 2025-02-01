@@ -2,26 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/features/quiz/presentation/pages/shimmer/shimmer_widget.dart';
 
+
+
 class QuizScreenShimmer extends StatelessWidget {
   const QuizScreenShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
+        gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
       ),
       child: SafeArea(
         child: Column(
           children: [
-            _buildAppBarShimmer(),
-            _buildProgressBarShimmer(),
+            _buildAppBarShimmer(isDark),
+            _buildProgressBarShimmer(isDark),
             const SizedBox(height: 24),
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(30),
                   ),
                 ),
@@ -29,9 +33,9 @@ class QuizScreenShimmer extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   child: Column(
                     children: [
-                      _buildQuestionCardShimmer(),
+                      _buildQuestionCardShimmer(isDark, context),
                       const SizedBox(height: 20),
-                      _buildOptionsShimmer(),
+                      _buildOptionsShimmer(isDark),
                       const SizedBox(height: 100),
                     ],
                   ),
@@ -44,7 +48,7 @@ class QuizScreenShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBarShimmer() {
+  Widget _buildAppBarShimmer(bool isDark) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -52,7 +56,7 @@ class QuizScreenShimmer extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const ShimmerWidget.circular(
@@ -64,7 +68,8 @@ class QuizScreenShimmer extends StatelessWidget {
           Column(
             children: [
               Container(
-                decoration: BoxDecoration(  color: Colors.white.withOpacity(0.2),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const ShimmerWidget.rectangular(
@@ -80,8 +85,11 @@ class QuizScreenShimmer extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(isDark ? 0.1 : 0.1),
+                  ),
                 ),
                 child: ShimmerWidget.rectangular(
                   width: 80,
@@ -93,7 +101,7 @@ class QuizScreenShimmer extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const ShimmerWidget.circular(
@@ -107,48 +115,59 @@ class QuizScreenShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBarShimmer() {
+  Widget _buildProgressBarShimmer(bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               ShimmerWidget.rectangular(
                 width: 150,
                 height: 16,
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+                borderRadius: BorderRadius.circular(8),
               ),
               ShimmerWidget.rectangular(
                 width: 40,
                 height: 16,
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+                borderRadius: BorderRadius.circular(8),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          ShimmerWidget.rectangular(
-            width: double.infinity,
-            height: 8,
-            borderRadius: BorderRadius.circular(10),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(isDark ? 0.1 : 0.2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ShimmerWidget.rectangular(
+              width: double.infinity,
+              height: 8,
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildQuestionCardShimmer() {
+  Widget _buildQuestionCardShimmer(bool isDark, BuildContext context) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
+        border: isDark
+            ? Border.all(
+          color: Colors.white.withOpacity(0.1),
+        )
+            : null,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.05),
+            color: AppColors.primary.withOpacity(isDark ? 0.2 : 0.05),
             blurRadius: 20,
             offset: const Offset(0, 5),
           ),
@@ -157,22 +176,22 @@ class QuizScreenShimmer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const ShimmerWidget.rectangular(
+          ShimmerWidget.rectangular(
             width: 100,
             height: 24,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderRadius: BorderRadius.circular(8),
           ),
           const SizedBox(height: 16),
-          const ShimmerWidget.rectangular(
+          ShimmerWidget.rectangular(
             width: double.infinity,
             height: 20,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderRadius: BorderRadius.circular(8),
           ),
           const SizedBox(height: 8),
-          const ShimmerWidget.rectangular(
+          ShimmerWidget.rectangular(
             width: double.infinity,
             height: 20,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderRadius: BorderRadius.circular(8),
           ),
           const SizedBox(height: 16),
           ShimmerWidget.rectangular(
@@ -185,7 +204,7 @@ class QuizScreenShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionsShimmer() {
+  Widget _buildOptionsShimmer(bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -195,7 +214,9 @@ class QuizScreenShimmer extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.1),
+                color: isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : AppColors.primary.withOpacity(0.1),
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(12),

@@ -53,6 +53,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) =>
           getIt<QuizBloc>()..add(GetQuizQuestionsEvent(quizId: widget.quizId)),
@@ -69,7 +70,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 opacity: _fadeController,
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
+                    gradient: isDark
+                        ? AppColors.darkGradient
+                        : AppColors.primaryGradient,
                   ),
                   child: SafeArea(
                     child: Column(
@@ -89,9 +92,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                         const SizedBox(height: 24),
                         Expanded(
                           child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
+                            decoration: BoxDecoration(
+                              color:
+                              Theme.of(context).scaffoldBackgroundColor,
+                              borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(30),
                               ),
                             ),
@@ -251,6 +255,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildBottomButtons(BuildContext context, int quizId) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocConsumer<QuizBloc, QuizState>(
       listener: (context, state) {
         if (state.status == QuizStatus.quizResultSuccess) {
@@ -266,11 +271,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, -5),
               ),

@@ -5,25 +5,26 @@ part 'user_model.g.dart';
 
 @JsonSerializable()
 class UserModel extends Equatable {
-  @JsonKey(name: "password")
-  String? password;
-  bool? enabled;
-  List<Authority>? authorities;
+  @JsonKey(name: "id")
+  int? id;
   String? username;
-  bool? credentialsNonExpired;
-  bool? accountNonExpired;
-  bool? accountNonLocked;
-  int? userId;
+  String? password;
+  String? email;
+  List<String>? roles;
+  bool? enabled;
+  int? totalScore;
+  List<String>? badges;
+
 
   UserModel({
-    this.password,
-    this.enabled,
-    this.authorities,
+    this.id,
     this.username,
-    this.credentialsNonExpired,
-    this.accountNonExpired,
-    this.accountNonLocked,
-    this.userId,
+    this.password,
+    this.email,
+    this.roles,
+    this.enabled,
+    this.totalScore,
+    this.badges,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -36,27 +37,11 @@ class UserModel extends Equatable {
   List<Object?> get props => [
         password,
         enabled,
-        authorities,
+    totalScore,
+    badges,roles,id,email,
         username,
-        credentialsNonExpired,
-        accountNonExpired,
-        accountNonLocked,
-        userId,
+
       ];
 }
 
-class Authority {
-  String? authority;
 
-  Authority({
-    this.authority,
-  });
-
-  factory Authority.fromJson(Map<String, dynamic> json) => Authority(
-        authority: json["authority"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "authority": authority,
-      };
-}

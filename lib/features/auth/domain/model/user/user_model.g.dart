@@ -7,25 +7,25 @@ part of 'user_model.dart';
 // **************************************************************************
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
-      password: json['password'] as String?,
-      enabled: json['enabled'] as bool?,
-      authorities: (json['authorities'] as List<dynamic>?)
-          ?.map((e) => Authority.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      id: (json['id'] as num?)?.toInt(),
       username: json['username'] as String?,
-      credentialsNonExpired: json['credentialsNonExpired'] as bool?,
-      accountNonExpired: json['accountNonExpired'] as bool?,
-      accountNonLocked: json['accountNonLocked'] as bool?,
-      userId: (json['userId'] as num?)?.toInt(),
+      password: json['password'] as String?,
+      email: json['email'] as String?,
+      roles:
+          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      enabled: json['enabled'] as bool?,
+      totalScore: (json['totalScore'] as num?)?.toInt(),
+      badges:
+          (json['badges'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
-      'password': instance.password,
-      'enabled': instance.enabled,
-      'authorities': instance.authorities,
+      'id': instance.id,
       'username': instance.username,
-      'credentialsNonExpired': instance.credentialsNonExpired,
-      'accountNonExpired': instance.accountNonExpired,
-      'accountNonLocked': instance.accountNonLocked,
-      'userId': instance.userId,
+      'password': instance.password,
+      'email': instance.email,
+      'roles': instance.roles,
+      'enabled': instance.enabled,
+      'totalScore': instance.totalScore,
+      'badges': instance.badges,
     };

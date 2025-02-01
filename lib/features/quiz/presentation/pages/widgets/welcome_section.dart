@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:game_app/core/storage/shared_prefs.dart';
 
-class WelcomeSection extends StatelessWidget {
+class WelcomeSection extends StatefulWidget {
   const WelcomeSection({super.key});
+
+  @override
+  State<WelcomeSection> createState() => _WelcomeSectionState();
+}
+
+class _WelcomeSectionState extends State<WelcomeSection> {
+  List<String>? userRoles;
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRoles();
+  }
+
+  Future<void> _loadUserRoles() async {
+    await SharedPrefs.init();
+    final roles = await SharedPrefs.getRoles();
+    setState(() {
+      userRoles = roles;
+      isAdmin = roles?.contains("ROLE_ADMIN") ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15,),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -114,6 +138,17 @@ class WelcomeSection extends StatelessWidget {
               ],
             ),
           ),
+          if (isAdmin) // Example: Show admin-specific UI
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text(
+                'Admin Mode',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
         ],
       ),
     );

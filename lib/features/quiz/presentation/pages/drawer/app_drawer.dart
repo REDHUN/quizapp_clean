@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app/core/router/app_router.dart';
 import 'package:game_app/core/theme/app_colors.dart';
+import 'package:game_app/features/auth/presentation/bloc/user_bloc.dart';
+import 'package:game_app/features/auth/presentation/bloc/user_event.dart';
+import 'package:game_app/features/auth/presentation/bloc/user_state.dart';
+import 'package:game_app/features/auth/presentation/pages/auth_page.dart';
 
 
 import 'drawer_header.dart';
@@ -77,12 +83,25 @@ class AppDrawer extends StatelessWidget {
                               EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                           child: Divider(),
                         ),
-                        DrawerMenuItem(
+                        BlocListener<UserBloc, UserState>(
+  listener: (context, state) {
+if(state==UserState.initial()){
+
+  AppRouter.router.go(AuthPage.route);
+}
+  },
+  child: DrawerMenuItem(
                           icon: Icons.logout_rounded,
                           title: 'Logout',
                           subtitle: 'See you soon!',
                           color: AppColors.error,
+                          onTap: (){
+                            context.read<UserBloc>().add(
+                             UserLogoutEvent()
+                            );
+                          },
                         ),
+),
                         const SizedBox(height: 20),
                       ],
                     ),

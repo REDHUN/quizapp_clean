@@ -17,12 +17,33 @@ class AppTheme {
       ),
       textTheme: const TextTheme(
         headlineMedium: TextStyle(
+          fontFamily: "Lexend",
           fontWeight: FontWeight.bold,
           letterSpacing: -0.5,
         ),
+        headlineSmall: TextStyle(
+          fontFamily: "Lexend",
+          fontWeight: FontWeight.bold,
+        ),
         titleLarge: TextStyle(
+          fontFamily: "Lexend",
           fontWeight: FontWeight.w600,
           letterSpacing: 0.2,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        bodySmall: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        labelLarge: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        labelSmall: TextStyle(
+          fontFamily: "Lexend",
         ),
       ),
     );
@@ -35,6 +56,37 @@ class AppTheme {
         brightness: Brightness.dark,
       ),
       useMaterial3: true,
+      textTheme: const TextTheme(
+        headlineMedium: TextStyle(
+          fontFamily: "Lexend",
+          fontWeight: FontWeight.bold,
+          letterSpacing: -0.5,
+        ),
+        headlineSmall: TextStyle(
+          fontFamily: "Lexend",
+          fontWeight: FontWeight.bold,
+        ),
+        titleLarge: TextStyle(
+          fontFamily: "Lexend",
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        bodySmall: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        labelLarge: TextStyle(
+          fontFamily: "Lexend",
+        ),
+        labelSmall: TextStyle(
+          fontFamily: "Lexend",
+        ),
+      ),
       cardTheme: CardTheme(
         elevation: 2,
         shadowColor: Colors.black.withOpacity(0.2),

@@ -8,6 +8,7 @@ class StartQuizFAB extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: AppColors.primaryGradient,

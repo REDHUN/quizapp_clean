@@ -44,12 +44,12 @@ class CustomAppBar extends StatelessWidget {
           icon: Icons.notifications_outlined,
           onPressed: () {},
         ),
-        _buildActionButton(
-          context,
-          icon: Icons.person_outline_rounded,
-          onPressed: () {},
-          rightMargin: 16,
-        ),
+        // _buildActionButton(
+        //   context,
+        //   icon: Icons.person_outline_rounded,
+        //   onPressed: () {},
+        //   rightMargin: 16,
+        // ),
       ],
     );
   }

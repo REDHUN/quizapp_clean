@@ -23,7 +23,6 @@ class AuthRepositoryImpl implements AuthRepository {
       await SharedPrefs.saveLoginUserPass(password);
       await SharedPrefs.saveUserId(request.userId??"");
 
-      print("user iddddd ${request.userId??""}");
 
       return Either.right(request);
     } on DioException catch (e) {
