@@ -26,6 +26,7 @@ class CreateQuizCustomDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -55,7 +56,7 @@ class CreateQuizCustomDropdown extends StatelessWidget {
             height: 0.8,
           ),
           filled: true,
-          fillColor: backgroundColor,
+          fillColor: isDark?null: Colors.white,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           labelStyle: TextStyle(color: textColor.withOpacity(0.7)),

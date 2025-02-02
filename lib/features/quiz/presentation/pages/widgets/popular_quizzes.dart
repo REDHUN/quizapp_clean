@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:game_app/core/router/app_router.dart';
 import 'package:game_app/core/theme/grediant.dart';
 import 'package:game_app/features/quiz/domain/model/quiz_model/quiz_model.dart';
+import 'package:game_app/features/quiz/presentation/pages/quiz/quiz_screen.dart';
 
 
 class PopularQuizzes extends StatelessWidget {
@@ -89,7 +90,10 @@ class PopularQuizzes extends StatelessWidget {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          AppRouter.router.push('/quizAttend${quizList[index].id??""}');
+                         // AppRouter.router.push('/quizAttend/${quizList[index].id??""}/:"ddd"');
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                            return QuizScreen(quizId: quizList[index].id.toString()??"", quizName: quizList[index].title??"");
+                          },));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(16),

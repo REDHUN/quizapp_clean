@@ -1,6 +1,8 @@
 
 import 'package:game_app/features/auth/presentation/pages/auth_page.dart';
 import 'package:game_app/features/create_quiz/presentation/pages/create_quiz_screen.dart';
+import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_create/create_question_screen.dart';
+import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_manage_screen.dart';
 import 'package:game_app/features/quiz/presentation/pages/home_page.dart';
 import 'package:game_app/features/quiz/presentation/pages/quiz/quiz_screen.dart';
 import 'package:game_app/features/quiz_report/presentation/pages/quiz_report/quiz_history_screen.dart';
@@ -31,7 +33,8 @@ class AppRouter {
       path: QuizScreen.route,
       builder: (context, state) {
         final quizId = state.pathParameters['quizId'];
-        return QuizScreen(quizId: quizId!);
+        final quizName = state.pathParameters['quizName'];
+        return QuizScreen(quizId: quizId!,quizName: quizName??"",);
       },
     ),
     GoRoute(
@@ -44,6 +47,18 @@ class AppRouter {
       path: CreateQuizScreen.route,
       builder: (context, state) {
         return CreateQuizScreen();
+      },
+    ),
+    GoRoute(
+      path: QuestionManagementScreen.route,
+      builder: (context, state) {
+        return QuestionManagementScreen();
+      },
+    ),
+    GoRoute(
+      path: CreateQuestionScreen.route,
+      builder: (context, state) {
+        return CreateQuestionScreen();
       },
     ),
   ]);

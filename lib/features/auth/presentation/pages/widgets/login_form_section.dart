@@ -72,8 +72,8 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: () {
               context.read<UserBloc>().add(
                   LoginWithPassowordEvent(
-                      password: passwordController.text,
-                      username: nameController.text));
+                      password: passwordController.text.trim(),
+                      username: nameController.text.trim()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6366F1),

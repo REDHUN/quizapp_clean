@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/core/ui/common_appbar.dart';
+import 'package:game_app/core/ui/common_snackbar.dart';
 import 'package:game_app/features/create_quiz/presentation/bloc/create_quiz_bloc.dart';
 import 'package:game_app/features/create_quiz/presentation/bloc/create_quiz_event.dart';
 import 'package:game_app/features/create_quiz/presentation/bloc/create_quiz_state.dart';
@@ -11,6 +12,7 @@ import 'widgets/quiz_form.dart';
 
 class CreateQuizScreen extends StatefulWidget {
   const CreateQuizScreen({super.key});
+
   static String route = '/createQuiz';
 
   @override
@@ -82,17 +84,13 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
       final category = _selectedCategory ?? 'Uncategorized';
       final group = _selectedGroup ?? 'Ungrouped';
 
-
-
-    context.read<CreateQuizBloc>().add(
-        CreateQuiz(
-    quizDescription: description,
-          noOfQuestions: numberOfQuestions,
-          quizTitle: title,
-        ),
-      );
-
-
+      context.read<CreateQuizBloc>().add(
+            CreateQuiz(
+              quizDescription: description,
+              noOfQuestions: numberOfQuestions,
+              quizTitle: title,
+            ),
+          );
     }
   }
 
@@ -107,7 +105,6 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
     final buttonColor = isDark ? AppColors.secondary : AppColors.primary;
 
     return Scaffold(
-
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isWideScreen = constraints.maxWidth > 600;
@@ -121,65 +118,69 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
               child: SafeArea(
                 bottom: false,
                 child: BlocListener<CreateQuizBloc, CreateQuizState>(
-  listener: (context, state) {
-  if(state.status==CreateQuizStatus.success){
-    _showSuccessDialog();
-  }
-  else if(state.status==CreateQuizStatus.error){
-    print("error occured");
-  }
-  },
-  child: Column(
-                  children: [
-                    const CommonAppbar(title: "Create Quiz"),
-                    Expanded(
-                      child: Container(
-                        decoration:  BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(30),
+                  listener: (context, state) {
+                    if (state.status == CreateQuizStatus.success) {
+                      _showSuccessDialog();
+                    } else if (state.status == CreateQuizStatus.error) {
+                      CustomSnackBars.showSnackBar(
+                        context,
+                        CustomSnackBars.error(
+                            message: state.errorMessage.toString()),
+                      );
+                    }
+                  },
+                  child: Column(
+                    children: [
+
+                      const CommonAppbar(title: "Create Quiz"),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(30),
+                            ),
                           ),
-                        ),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: isWideScreen ? 800 : double.infinity),
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.all(16.0),
-                            child: QuizForm(
-                              formKey: _formKey,
-                              isWideScreen: isWideScreen,
-                              titleController: _titleController,
-                              descriptionController: _descriptionController,
-                              questionsController: _questionsController,
-                              selectedCategory: _selectedCategory,
-                              selectedGroup: _selectedGroup,
-                              categories: _categories,
-                              groups: _groups,
-                              backgroundColor: backgroundColor,
-                              textColor: textColor,
-                              iconColor: iconColor,
-                              buttonColor: buttonColor,
-                              onCategoryChanged: (value) {
-                                setState(() {
-                                  _selectedCategory = value;
-                                });
-                                _formKey.currentState?.validate();
-                              },
-                              onGroupChanged: (value) {
-                                setState(() {
-                                  _selectedGroup = value;
-                                });
-                                _formKey.currentState?.validate();
-                              },
-                              onSubmit: _createQuiz,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth: isWideScreen ? 800 : double.infinity),
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(16.0),
+                              child: QuizForm(
+                                formKey: _formKey,
+                                isWideScreen: isWideScreen,
+                                titleController: _titleController,
+                                descriptionController: _descriptionController,
+                                questionsController: _questionsController,
+                                selectedCategory: _selectedCategory,
+                                selectedGroup: _selectedGroup,
+                                categories: _categories,
+                                groups: _groups,
+                                backgroundColor: backgroundColor,
+                                textColor: textColor,
+                                iconColor: iconColor,
+                                buttonColor: buttonColor,
+                                onCategoryChanged: (value) {
+                                  setState(() {
+                                    _selectedCategory = value;
+                                  });
+                                  //  _formKey.currentState?.validate();
+                                },
+                                onGroupChanged: (value) {
+                                  setState(() {
+                                    _selectedGroup = value;
+                                  });
+                                  _formKey.currentState?.validate();
+                                },
+                                onSubmit: _createQuiz,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-),
               ),
             ),
           );

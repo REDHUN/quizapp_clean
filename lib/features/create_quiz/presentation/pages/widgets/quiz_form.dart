@@ -52,13 +52,18 @@ class QuizForm extends StatelessWidget {
           if (isWideScreen)
             Column(
               children: [
-                QuizTextFields.wide(
-                  titleController: titleController,
-                  descriptionController: descriptionController,
-                  questionsController: questionsController,
-                  backgroundColor: backgroundColor,
-                  textColor: textColor,
-                  iconColor: iconColor,
+                SizedBox(
+                  height: 30,
+                ),
+                Form(
+                  child: QuizTextFields.wide(
+                    titleController: titleController,
+                    descriptionController: descriptionController,
+                    questionsController: questionsController,
+                    backgroundColor: backgroundColor,
+                    textColor: textColor,
+                    iconColor: iconColor,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 QuizDropdowns.wide(
@@ -77,6 +82,9 @@ class QuizForm extends StatelessWidget {
           else
             Column(
               children: [
+                SizedBox(
+                  height: 30,
+                ),
                 QuizTextFields(
                   titleController: titleController,
                   descriptionController: descriptionController,
@@ -87,6 +95,7 @@ class QuizForm extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 QuizDropdowns(
+
                   selectedCategory: selectedCategory,
                   selectedGroup: selectedGroup,
                   categories: categories,

@@ -16,6 +16,7 @@ class QuizScreenShimmer extends StatelessWidget {
         gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
       ),
       child: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             _buildAppBarShimmer(isDark),

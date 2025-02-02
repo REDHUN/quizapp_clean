@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 
-
 class QuizProgressBar extends StatelessWidget {
   final int currentQuestion;
   final int totalQuestions;
@@ -14,6 +13,10 @@ class QuizProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double progress = totalQuestions > 0
+        ? (currentQuestion / totalQuestions).clamp(0.0, 1.0)
+        : 0.0;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
@@ -30,7 +33,7 @@ class QuizProgressBar extends StatelessWidget {
                 ),
               ),
               Text(
-                '${(currentQuestion / totalQuestions * 100).round()}%',
+                '${(progress * 100).round()}%',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -43,7 +46,7 @@ class QuizProgressBar extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
-              value: currentQuestion / totalQuestions,
+              value: progress,
               backgroundColor: Colors.white.withOpacity(0.2),
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.warning),
               minHeight: 8,

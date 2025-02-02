@@ -17,7 +17,7 @@ class QuizManagementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: 150,
       height: 180,
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Card(
@@ -80,7 +80,7 @@ class QuizManagementCard extends StatelessWidget {
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

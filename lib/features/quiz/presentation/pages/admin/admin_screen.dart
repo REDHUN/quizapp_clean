@@ -3,6 +3,7 @@ import 'package:game_app/core/router/app_router.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/core/theme/grediant.dart';
 import 'package:game_app/features/create_quiz/presentation/pages/create_quiz_screen.dart';
+import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_manage_screen.dart';
 
 import 'widgets/admin_stat_card.dart';
 import 'widgets/quiz_management_card.dart';
@@ -144,7 +145,7 @@ class AdminScreen extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 1.1,
+            childAspectRatio: 1,
             children: [
               _buildActionCard(
                 context,
@@ -155,6 +156,17 @@ class AdminScreen extends StatelessWidget {
                 onTap: () {
 
                   AppRouter.router.push(CreateQuizScreen.route);
+                },
+              ),
+              _buildActionCard(
+                context,
+                title: 'Question Management',
+                subtitle: 'Manage Questions',
+                icon: Icons.question_mark,
+                gradient: actionGradients[4],
+                onTap: () {
+
+                  AppRouter.router.push(QuestionManagementScreen.route);
                 },
               ),
               _buildActionCard(
@@ -226,6 +238,7 @@ class AdminScreen extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
+
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: isDark

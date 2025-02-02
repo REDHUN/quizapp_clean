@@ -71,6 +71,12 @@ class QuizDropdowns extends StatelessWidget {
 
   Widget _buildCategoryDropdown() {
     return CreateQuizCustomDropdown(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please select a category';
+        }
+        return null;
+      },
       value: selectedCategory,
       label: 'Select Category',
       icon: Icons.category,
@@ -80,6 +86,7 @@ class QuizDropdowns extends StatelessWidget {
       items: categories,
       onChanged: onCategoryChanged,
     );
+
   }
 
   Widget _buildGroupDropdown() {
@@ -92,6 +99,13 @@ class QuizDropdowns extends StatelessWidget {
       iconColor: iconColor,
       items: groups,
       onChanged: onGroupChanged,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please select a group';
+          return 'Please select a group';
+        }
+        return null;
+      },
     );
   }
 }

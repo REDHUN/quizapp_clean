@@ -66,11 +66,23 @@ class QuizTextFields extends StatelessWidget {
       backgroundColor: backgroundColor,
       textColor: textColor,
       iconColor: iconColor,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter quiz title';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildDescriptionField() {
     return CreateQuizCustomTextField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter description';
+        }
+        return null;
+      },
       controller: descriptionController,
       label: 'Quiz Description',
       icon: Icons.description,
@@ -82,6 +94,15 @@ class QuizTextFields extends StatelessWidget {
 
   Widget _buildQuestionsField() {
     return CreateQuizCustomTextField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter description';
+        }
+        else if (double.tryParse(value) == null) {
+          return 'Please enter a valid number';
+        }
+        return null;
+      },
       controller: questionsController,
       label: 'Number of Questions',
       icon: Icons.format_list_numbered,

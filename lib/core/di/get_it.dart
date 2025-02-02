@@ -10,6 +10,10 @@ import 'package:game_app/features/create_quiz/data/datasource/create_quiz_dataso
 import 'package:game_app/features/create_quiz/data/repository_impl/create_quiz_repository_impl.dart';
 import 'package:game_app/features/create_quiz/domain/repository/quiz_create_repository.dart';
 import 'package:game_app/features/create_quiz/presentation/bloc/create_quiz_bloc.dart';
+import 'package:game_app/features/question_manegement/data/datasource/question_manage_datasource.dart';
+import 'package:game_app/features/question_manegement/data/repository_impl/question_manage_repository_impl.dart';
+import 'package:game_app/features/question_manegement/domain/repository/question_manage_repository.dart';
+import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_bloc.dart';
 import 'package:game_app/features/quiz/data/datasource/quiz_datasource.dart';
 import 'package:game_app/features/quiz/data/repository_impl/quiz_repository_impl.dart';
 import 'package:game_app/features/quiz/domain/repository/quiz_repository.dart';
@@ -44,6 +48,8 @@ void registerDataSource() {
   getIt.registerSingleton(QuizDataSource(dio: dioWithTokenInterceptor));
   getIt.registerSingleton(QuizReportDataSource(dio: dioWithTokenInterceptor));
   getIt.registerSingleton(CreateQuizDataSource(dio: dioWithTokenInterceptor));
+  getIt.registerSingleton(
+      QuestionManageDatasource(dio: dioWithTokenInterceptor));
 }
 
 void registerRepository() {
@@ -57,6 +63,8 @@ void registerRepository() {
       QuizReportRepositoryImpl(quizReportDataSource: getIt()));
   getIt.registerSingleton<CreateQuizRepository>(
       CreateQuizRepositoryImpl(createQuizDataSource: getIt()));
+  getIt.registerSingleton<QuestionManageRepository>(
+      QuestionManageRepositoryImpl(questionManageDatasource: getIt()));
 }
 
 void registerBloc() {
@@ -71,6 +79,9 @@ void registerBloc() {
   );
   getIt.registerFactory(
     () => CreateQuizBloc(createQuizRepository: getIt()),
+  );
+  getIt.registerFactory(
+    () => QuestionManageBloc(questionManageRepository: getIt()),
   );
 
   getIt.registerFactory(
