@@ -24,8 +24,8 @@ class PreviewButton extends StatelessWidget {
           content: Text(message),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height - 100,
+          margin: const EdgeInsets.only(
+            bottom: 80, // Adjusted margin to prevent overlap with bottom buttons
             right: 20,
             left: 20,
           ),

@@ -86,6 +86,8 @@ class QuestionManageBloc
 
     if (data.isRight()) {
       emit(state.copyWith(status: QuestionManageStatus.questionSubmitSuccess));
+
+      emit(state.copyWith(status: QuestionManageStatus.questionSubmitSuccess));
     } else {
       emit(state.copyWith(
           status: QuestionManageStatus.questionSubmitError, errorMessage: data.left.message));

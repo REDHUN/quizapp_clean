@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:game_app/core/model/question_detail_model.dart';
+import 'package:game_app/core/storage/shared_prefs.dart';
 import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/question_type_model/question_type_model.dart';
@@ -35,13 +36,17 @@ class QuestionManageDatasource {
 
   Future<QuestionDetailModel> submitQuestion({required String question, required String correctAnswer, required String selectedQuestionType, required List<String> options, required String selectedQuestionCategory, required String selectedDifficultyId}) async {
     List<Map<String, String>> formattedOption = options.map((name) => {"text": name}).toList();
+
+   final userName=await SharedPrefs.getName();
     Map<String,dynamic> queryParameter={
       "question": question,
       "correctAnswer": correctAnswer,
       "questionType": selectedQuestionType,
       "difficultyId": selectedDifficultyId,
       "categoryId": selectedQuestionCategory,
-      "options": formattedOption
+      "options": formattedOption,
+      "createdBy": userName
+
     };
 
     var request = await dio.post("api/questions/createQuestion",data: queryParameter);

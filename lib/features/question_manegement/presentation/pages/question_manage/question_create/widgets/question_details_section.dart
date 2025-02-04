@@ -59,6 +59,7 @@ class QuestionDetailsSection extends StatelessWidget {
           selector: (state) => state.selectedDifficultyId?.toString(),
           builder: (context, selectedDifficultyId) {
             return DropdownButtonFormField<String>(
+              validator: validator,
               value: selectedDifficultyId,
               onChanged: (value) {
                 if (value != null) {
