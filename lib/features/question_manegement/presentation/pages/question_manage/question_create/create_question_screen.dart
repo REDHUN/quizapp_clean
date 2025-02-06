@@ -37,6 +37,7 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
       _isInitialized = true;
       Future.microtask(() {
         final bloc = context.read<QuestionManageBloc>();
+        bloc.add(ResetQuestionManageState());
         bloc.add(GetQuestionCategory());
         bloc.add(GetQuestionDifficulty());
         bloc.add(GetQuestionType());

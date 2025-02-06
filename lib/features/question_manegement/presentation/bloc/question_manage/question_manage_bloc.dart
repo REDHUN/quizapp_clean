@@ -16,6 +16,7 @@ class QuestionManageBloc
     on<SelectQuestionDifficulty>(onSelectQuestionDifficulty);
     on<SelectQuestionTypeId>(onSelectQuestionTypeId);
     on<SubmitQuestion>(onSubmitQuestion);
+    on<ResetQuestionManageState>(onResetQuestionManageState);
   }
 
   Future onGetQuestionCategory(GetQuestionCategory event, Emitter emit) async {
@@ -93,4 +94,8 @@ class QuestionManageBloc
           status: QuestionManageStatus.questionSubmitError, errorMessage: data.left.message));
     }
   }
+
+  }
+void onResetQuestionManageState(ResetQuestionManageState event, Emitter<QuestionManageState> emit) {
+  emit(QuestionManageState.initial());
 }

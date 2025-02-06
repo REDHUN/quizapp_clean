@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:game_app/core/router/app_router.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_create/create_question_screen.dart';
+import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_view/question_view_screen.dart';
 
 
 class QuestionManagementScreen extends StatelessWidget {
@@ -104,10 +105,7 @@ class QuestionManagementScreen extends StatelessWidget {
               subtitle: 'Browse and manage your existing questions',
               icon: Icons.list_alt_rounded,
               color: AppColors.success,
-              onTap: () => Navigator.pushNamed(
-                context,
-                '/admin/questions/view/all',
-              ),
+              onTap: () => AppRouter.router.push(QuestionViewScreen.route)
             ),
             _buildActionCard(
               context,

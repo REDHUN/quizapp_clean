@@ -145,7 +145,7 @@ class AdminScreen extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 1,
+            childAspectRatio: 0.9,
             children: [
               _buildActionCard(
                 context,

@@ -35,3 +35,4 @@ class SubmitQuestion extends QuestionManageEvent {
 
   SubmitQuestion({required this.question,required this.correctAnswer,required this.options});
 }
+class ResetQuestionManageState extends QuestionManageEvent {}
