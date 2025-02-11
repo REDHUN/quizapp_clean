@@ -17,6 +17,7 @@ class QuestionManageBloc
     on<SelectQuestionTypeId>(onSelectQuestionTypeId);
     on<SubmitQuestion>(onSubmitQuestion);
     on<ResetQuestionManageState>(onResetQuestionManageState);
+    on<GetAllQuestions>(onGetAllQuestions);
   }
 
   Future onGetQuestionCategory(GetQuestionCategory event, Emitter emit) async {
@@ -95,7 +96,25 @@ class QuestionManageBloc
     }
   }
 
+  Future onGetAllQuestions(GetAllQuestions event, Emitter emit) async {
+    emit(state.copyWith(status: QuestionManageStatus.loading));
+    var data = await questionManageRepository.getAllQuestions();
+
+    if (data.isRight()) {
+      emit(state.copyWith(status: QuestionManageStatus.success));
+
+      emit(state.copyWith(questionList: data.right));
+    } else {
+      emit(state.copyWith(
+          status: QuestionManageStatus.error, errorMessage: data.left.message));
+    }
   }
-void onResetQuestionManageState(ResetQuestionManageState event, Emitter<QuestionManageState> emit) {
-  emit(QuestionManageState.initial());
+  void onResetQuestionManageState(ResetQuestionManageState event, Emitter<QuestionManageState> emit) {
+    emit(QuestionManageState.initial());
+  }
+
 }
+
+
+
+

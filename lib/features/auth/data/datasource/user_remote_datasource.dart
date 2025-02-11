@@ -10,7 +10,7 @@ class UserRemoteDataSource{
 
 Future<UserModel>getUser() async{
 
-  var request=await dio.get("api/auth/getUserDetails");
+  var request=await dio.get("api/user/getUserDetails");
 
   return UserModel.fromJson(request.data);
 }

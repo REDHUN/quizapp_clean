@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_app/core/di/get_it.dart';
+import 'package:game_app/core/router/app_router.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
@@ -8,13 +8,16 @@ import 'package:game_app/features/question_manegement/domain/model/question_type
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_bloc.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_event.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_state.dart';
+import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_edit/edit_question_screen.dart';
 
 import 'widgets/question_filter.dart';
 import 'widgets/question_list_item.dart';
 
 class QuestionViewScreen extends StatefulWidget {
   const QuestionViewScreen({super.key});
+
   static String route = '/questionView';
+
   @override
   State<QuestionViewScreen> createState() => _QuestionViewScreenState();
 }
@@ -24,29 +27,6 @@ class _QuestionViewScreenState extends State<QuestionViewScreen> {
   String _selectedDifficulty = 'All';
   final _searchController = TextEditingController();
   bool _isInitialized = false;
-
-  // Dummy data for demonstration
-  final List<Map<String, dynamic>> _questions = [
-    {
-      'question': 'What is the capital of France?',
-      'category': 'Geography',
-      'difficulty': 'Easy',
-      'type': 'Multiple Choice',
-      'options': ['Paris', 'London', 'Berlin', 'Madrid'],
-      'correctAnswer': 0, // Index of correct answer
-      'lastModified': DateTime.now().subtract(const Duration(days: 2)),
-    },
-    {
-      'question': 'What is the chemical symbol for Gold?',
-      'category': 'Science',
-      'difficulty': 'Medium',
-      'type': 'Multiple Choice',
-      'options': ['Au', 'Ag', 'Fe', 'Cu'],
-      'correctAnswer': 0,
-      'lastModified': DateTime.now().subtract(const Duration(days: 5)),
-    },
-    // Add more dummy questions as needed
-  ];
 
   @override
   void initState() {
@@ -63,6 +43,7 @@ class _QuestionViewScreenState extends State<QuestionViewScreen> {
         bloc.add(GetQuestionCategory());
         bloc.add(GetQuestionDifficulty());
         bloc.add(GetQuestionType());
+        bloc.add(GetAllQuestions());
       });
     }
   }
@@ -72,86 +53,132 @@ class _QuestionViewScreenState extends State<QuestionViewScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
-          ),
-          child: SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                _buildHeader(context),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 24),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(32),
-                      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              _buildHeader(context),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(32),
                     ),
-                    child: Column(
-                      children: [
-                        _buildSearchBar(context),
-                        BlocSelector<QuestionManageBloc, QuestionManageState,
-                            (QuestionManageStatus, List<CategoryModel>?, List<DifficultyModel>?, List<QuestionTypeModel>?)>(
-                          selector: (state) => (
+                  ),
+                  child: Column(
+                    children: [
+                      _buildSearchBar(context),
+                      BlocSelector<
+                          QuestionManageBloc,
+                          QuestionManageState,
+                          (
+                            QuestionManageStatus,
+                            List<CategoryModel>?,
+                            List<DifficultyModel>?,
+                            List<QuestionTypeModel>?
+                          )>(
+                        selector: (state) => (
                           state.status,
                           state.categoryList,
                           state.questionDifficultyList,
                           state.questionTypeList,
-                          ),
+                        ),
+                        builder: (context, state) {
+                          final (
+                            status,
+                            categoryList,
+                            difficultyList,
+                            typeList
+                          ) = state;
+
+                          if (status == QuestionManageStatus.loading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+
+                          if (status == QuestionManageStatus.error) {
+                            return const Center(
+                                child: Text('Failed to load data'));
+                          }
+
+                          return QuestionFilter(
+                              // Pass the necessary data to the QuestionFilter widget
+                              );
+                        },
+                      ),
+                      Expanded(
+                        child: BlocBuilder<QuestionManageBloc,
+                            QuestionManageState>(
                           builder: (context, state) {
-                            final (status, categoryList, difficultyList, typeList) = state;
-
-                            if (status == QuestionManageStatus.loading) {
-                              return const Center(child: CircularProgressIndicator());
+                            print(
+                                "Current State: ${state.status}"); // Debugging log
+                            print(
+                                "Questions: ${state.questionList}"); // Debugging log
+                            if (state.status == QuestionManageStatus.loading) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             }
 
-                            if (status == QuestionManageStatus.error) {
-                              return const Center(child: Text('Failed to load data'));
+                            if (state.status == QuestionManageStatus.error) {
+                              return Center(
+                                  child: Text(state.errorMessage ??
+                                      'Failed to load questions'));
                             }
 
-                            return QuestionFilter(
+                            if (state.questionList == null ||
+                                state.questionList!.isEmpty) {
+                              return _buildEmptyState();
+                            }
 
+                            return ListView.builder(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: state.questionList!.length,
+                              itemBuilder: (context, index) {
+                                final question = state.questionList![index];
+                                return QuestionListItem(
+                                  question: question.question ?? "",
+                                  category: question.categoryName ?? 'Unknown',
+                                  difficulty:
+                                      question.dificaltyName ?? 'Unknown',
+                                  type: question.questionTypeName ?? 'Unknown',
+                                  options: question.options ?? [],
+                                  correctAnswerAnswerId:
+                                      question.correctAnswerId ?? 0,
+                                  lastModified: DateTime.now(),
+                                  onEdit: () {
+                                    //  AppRouter.router.push(EditQuestionScreen.route);
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) {
+                                        return EditQuestionScreen(
+                                            questionModel: question);
+                                      },
+                                    ));
+                                  },
+                                  onDelete: () {
+                                    // Implement delete functionality
+                                  },
+                                );
+                              },
                             );
                           },
                         ),
-                        Expanded(
-                          child: _questions.isEmpty
-                              ? _buildEmptyState()
-                              : ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: _questions.length,
-                            itemBuilder: (context, index) {
-                              final question = _questions[index];
-                              return QuestionListItem(
-                                question: question['question'],
-                                category: question['category'],
-                                difficulty: question['difficulty'],
-                                type: question['type'],
-                                options: List<String>.from(question['options']),
-                                correctAnswerIndex: question['correctAnswer'],
-                                lastModified: question['lastModified'],
-                                onEdit: () {
-                                  // Implement edit functionality
-                                },
-                                onDelete: () {
-                                  // Implement delete functionality
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   Widget _buildHeader(BuildContext context) {

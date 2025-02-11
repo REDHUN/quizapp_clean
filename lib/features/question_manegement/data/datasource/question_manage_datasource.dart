@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:game_app/core/model/question_detail_model.dart';
+import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/core/storage/shared_prefs.dart';
 import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
@@ -34,11 +35,18 @@ class QuestionManageDatasource {
     return difficultyList;
   }
 
-  Future<QuestionDetailModel> submitQuestion({required String question, required String correctAnswer, required String selectedQuestionType, required List<String> options, required String selectedQuestionCategory, required String selectedDifficultyId}) async {
-    List<Map<String, String>> formattedOption = options.map((name) => {"text": name}).toList();
+  Future<QuestionDetailModel> submitQuestion(
+      {required String question,
+      required String correctAnswer,
+      required String selectedQuestionType,
+      required List<String> options,
+      required String selectedQuestionCategory,
+      required String selectedDifficultyId}) async {
+    List<Map<String, String>> formattedOption =
+        options.map((name) => {"text": name}).toList();
 
-   final userName=await SharedPrefs.getName();
-    Map<String,dynamic> queryParameter={
+    final userName = await SharedPrefs.getName();
+    Map<String, dynamic> queryParameter = {
       "question": question,
       "correctAnswer": correctAnswer,
       "questionType": selectedQuestionType,
@@ -46,14 +54,26 @@ class QuestionManageDatasource {
       "categoryId": selectedQuestionCategory,
       "options": formattedOption,
       "createdBy": userName
-
     };
 
-    var request = await dio.post("api/questions/createQuestion",data: queryParameter);
+    var request =
+        await dio.post("api/questions/createQuestion", data: queryParameter);
 
     QuestionDetailModel questionDetailModel =
         QuestionDetailModel.fromJson(request.data);
 
     return questionDetailModel;
+  }
+
+  Future<List<QuizQuestionModel>> getAllQuestions() async {
+    var request = await dio.get(
+      "api/questions/getAllQuestions",
+    );
+
+    List<dynamic> dataList = request.data as List;
+    List<QuizQuestionModel> questionList =
+        dataList.map((data) => QuizQuestionModel.fromJson(data)).toList();
+
+    return questionList;
   }
 }

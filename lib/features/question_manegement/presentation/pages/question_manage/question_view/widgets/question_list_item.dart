@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 
 
@@ -7,8 +8,8 @@ class QuestionListItem extends StatelessWidget {
   final String category;
   final String difficulty;
   final String type;
-  final List<String> options;
-  final int correctAnswerIndex;
+  final List<Option> options;
+  final int correctAnswerAnswerId;
   final DateTime lastModified;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -20,7 +21,7 @@ class QuestionListItem extends StatelessWidget {
     required this.difficulty,
     required this.type,
     required this.options,
-    required this.correctAnswerIndex,
+    required this.correctAnswerAnswerId,
     required this.lastModified,
     required this.onEdit,
     required this.onDelete,
@@ -161,21 +162,21 @@ class QuestionListItem extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                              index == correctAnswerIndex
+                              options[index].id==correctAnswerAnswerId
                                   ? Icons.check_circle
                                   : Icons.circle_outlined,
                               size: 16,
-                              color: index == correctAnswerIndex
+                              color:  options[index].id==correctAnswerAnswerId
                                   ? AppColors.success
                                   : Colors.grey,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                options[index],
+                             options[index].text??"",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: index == correctAnswerIndex
+                                  color:  options[index].id==correctAnswerAnswerId
                                       ? AppColors.success
                                       : null,
                                 ),
