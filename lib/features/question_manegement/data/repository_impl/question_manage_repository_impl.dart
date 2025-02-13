@@ -93,4 +93,23 @@ class QuestionManageRepositoryImpl implements QuestionManageRepository {
       return Either.left(AuthFailure(message: " Get Questions  Failure"));
   }
 }
+
+  @override
+  Future<Either<Failure, QuestionDetailModel>> editQuestion({required String question, required String correctAnswer, required String selectedQuestionType, required List<Option> options, required String selectedQuestionCategory, required String selectedDifficultyId, required int questionId}) async{
+    try {
+      final request = await questionManageDatasource.editQuestion(
+          question: question,
+          correctAnswer: correctAnswer,
+          options: options,
+          selectedDifficultyId: selectedDifficultyId,
+          selectedQuestionCategory: selectedQuestionCategory,
+          selectedQuestionType: selectedQuestionType,questionId: questionId);
+
+      return Either.right(request);
+    } on DioException catch (e) {
+      return Either.left(DioErrorHandler.handleDioError(e));
+    } on Exception catch (e) {
+      return Either.left(AuthFailure(message: " Get Question Type Failure"));
+    }
+  }
 }

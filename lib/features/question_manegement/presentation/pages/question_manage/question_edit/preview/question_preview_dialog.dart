@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/core/ui/common_snackbar.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_bloc.dart';
@@ -12,18 +13,24 @@ class EditQuestionPreviewDialog extends StatelessWidget {
   final String? category;
   final String? difficulty;
   final String? questionType;
-  final List<String> options;
+  final String? categoryName;
+  final String? difficultyName;
+  final String? questionTypeName;
+  final List<Option> options;
   final int? correctAnswerIndex;
+  final int questionId;
 
-  const EditQuestionPreviewDialog({
-    super.key,
-    this.question,
-    this.category,
-    this.difficulty,
-    this.questionType,
-    this.options = const [],
-    this.correctAnswerIndex,
-  });
+  const EditQuestionPreviewDialog(
+      {super.key,
+      this.question,
+      this.category,
+      this.difficulty,
+      this.questionType,
+      this.options = const [],
+      this.correctAnswerIndex,
+      required this.questionTypeName,
+      required this.categoryName,
+      required this.difficultyName,required this.questionId});
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +71,14 @@ class EditQuestionPreviewDialog extends StatelessWidget {
                       ),
                     ),
                     _buildFooter(
+                      questionDifficultyId: difficulty??"",
+                      questionCategoryId: categoryName??"",
+                      questionTypeId: questionType??"",
+                      questionId: questionId,
                         context: context,
                         options: options,
-                        correctAnswer: options[correctAnswerIndex!],
+                        correctAnswerId:
+                      options[correctAnswerIndex!].id.toString()??"",
                         question: question ?? ""),
                   ],
                 ),
@@ -179,11 +191,11 @@ class EditQuestionPreviewDialog extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     if (questionType != null)
-                      _buildChip(questionType!, AppColors.primary, Icons.quiz),
+                      _buildChip(questionTypeName!, AppColors.primary, Icons.quiz),
                     if (category != null)
-                      _buildChip(category!, AppColors.success, Icons.category),
+                      _buildChip(categoryName!, AppColors.success, Icons.category),
                     if (difficulty != null)
-                      _buildChip(difficulty!, AppColors.warning,
+                      _buildChip(difficultyName!, AppColors.warning,
                           Icons.signal_cellular_alt),
                   ],
                 ),
@@ -297,7 +309,7 @@ class EditQuestionPreviewDialog extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      options[index],
+                      options[index].text??"",
                       style: TextStyle(
                         fontSize: 16,
                         color: isCorrect ? color : null,
@@ -330,8 +342,11 @@ class EditQuestionPreviewDialog extends StatelessWidget {
   Widget _buildFooter(
       {required BuildContext context,
       required String question,
-      required String correctAnswer,
-      required List<String> options}) {
+      required String correctAnswerId,
+        required String questionCategoryId,
+        required String questionTypeId,
+        required String questionDifficultyId,
+      required List<Option> options,required int questionId}) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -377,10 +392,16 @@ class EditQuestionPreviewDialog extends StatelessWidget {
             },
             child: ElevatedButton.icon(
               onPressed: () {
-                context.read<QuestionManageBloc>().add(SubmitQuestion(
+                context.read<QuestionManageBloc>().add(EditQuestion(
+                  questionCategoryId: questionCategoryId,
+                      questionDifficultyId: questionDifficultyId,
+                      questionTypeId: questionTypeId,
                       question: question,
-                      correctAnswer: correctAnswer,
+                      correctAnswer: correctAnswerId,
                       options: options,
+                  questionId: questionId,
+
+
                     ));
               },
               style: ElevatedButton.styleFrom(

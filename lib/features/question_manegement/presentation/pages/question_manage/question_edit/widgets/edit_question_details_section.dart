@@ -29,7 +29,7 @@ class EditQuestionDetailsSection extends StatelessWidget {
           selector: (state) => state.selectedCategoryId?.toString(),
           builder: (context, selectedCategoryId) {
             return DropdownButtonFormField<String>(
-              value: selectedCategoryId,
+              value: controller.category,
               onChanged: (value) {
                 if (value != null) {
                   context.read<QuestionManageBloc>().add(SelectQuestionCategory(categoryId: value));
@@ -60,7 +60,7 @@ class EditQuestionDetailsSection extends StatelessWidget {
           builder: (context, selectedDifficultyId) {
             return DropdownButtonFormField<String>(
               validator: validator,
-              value: selectedDifficultyId,
+              value: controller.difficulty,
               onChanged: (value) {
                 if (value != null) {
                   context.read<QuestionManageBloc>().add(SelectQuestionDifficulty(difficultyId: value));

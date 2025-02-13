@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
@@ -17,6 +18,8 @@ class EditQuestionForm extends StatelessWidget {
   final List<QuestionTypeModel> questionTypeList;
   final List<CategoryModel> questionCategoryList;
   final List<DifficultyModel> questionDifficultyList;
+  final List<Option>? options;
+final int ? correctAnswerId;
 
   const EditQuestionForm({
     super.key,
@@ -24,7 +27,9 @@ class EditQuestionForm extends StatelessWidget {
     required this.controller,
     required this.questionTypeList,
     required this.questionCategoryList,
-    required this.questionDifficultyList
+    required this.questionDifficultyList,
+this.options,
+this.correctAnswerId
   });
 
   @override
@@ -83,6 +88,8 @@ class EditQuestionForm extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           EditAnswerOptionsSection(
+            options: options,
+            correctAnswerId: correctAnswerId,
             controller: controller,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -90,9 +97,9 @@ class EditQuestionForm extends StatelessWidget {
               }
               // Check for duplicate options
               final options =
-                  controller.options.where((o) => o.isNotEmpty).toList();
-              final uniqueOptions = options.toSet().toList();
-              if (options.length != uniqueOptions.length) {
+                  controller.options?.where((o) => o.text?.isNotEmpty??false).toList();
+              final uniqueOptions = options?.toSet().toList();
+              if (options?.length != uniqueOptions?.length) {
                 return 'Options must be unique';
               }
               return null;

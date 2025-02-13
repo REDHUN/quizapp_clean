@@ -18,7 +18,7 @@ QuestionDetailModel _$QuestionDetailModelFromJson(Map<String, dynamic> json) =>
       categoryId: json['categoryId'],
       difficultyId: json['difficultyId'],
       options: (json['options'] as List<dynamic>?)
-          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Options.fromJson(e as Map<String, dynamic>))
           .toList(),
       createdBy: json['createdBy'] as String?,
       createdTime: json['createdTime'] == null

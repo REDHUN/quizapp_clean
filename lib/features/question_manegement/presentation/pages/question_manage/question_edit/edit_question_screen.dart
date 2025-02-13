@@ -5,6 +5,7 @@ import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart
 import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/question_type_model/question_type_model.dart';
+
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_bloc.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_event.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_state.dart';
@@ -31,21 +32,20 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
   @override
   void initState() {
     super.initState();
-    _loadInitialData();
+    _initializeQuestionData();
   }
 
-  void _loadInitialData() {
-    final bloc = context.read<QuestionManageBloc>();
+  void _initializeQuestionData() {
     if (!_isInitialized) {
-      print("The question is ${widget.questionModel.question??""}");
       _controller.options = widget.questionModel.options
-              ?.map((option) => option.text)
-              .whereType<String>() // Removes any null values
-              .toList() ??
-          [];
-      _controller.questionText= widget.questionModel.question ?? "";
-      _controller.questionType = bloc.state.selectedQuestionTypeId ?? "";
-      print("The question is ${  _controller.questionText??""}");
+             ;
+      _controller.questionText = widget.questionModel.question ?? "";
+      _controller.questionType =
+          widget.questionModel.questionTypeId.toString() ?? "";
+      _controller.category = widget.questionModel.categoryId.toString() ?? "";
+      _controller.difficulty =
+          widget.questionModel.difficultyId.toString() ?? "";
+
       _isInitialized = true;
     }
   }
@@ -54,85 +54,101 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Question'),
-        elevation: 0,
-      ),
-      body: BlocSelector<
-          QuestionManageBloc,
-          QuestionManageState,
-          (
-            QuestionManageStatus,
-            List<CategoryModel>?,
-            List<DifficultyModel>?,
-            List<QuestionTypeModel>?
-          )>(
-        selector: (state) => (
-          state.status,
-          state.categoryList,
-          state.questionDifficultyList,
-          state.questionTypeList,
+    return BlocProvider(
+      create: (context) =>
+          getIt<QuestionManageBloc>()..add(FetchQuestionData()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit Question'),
+          elevation: 0,
         ),
-        builder: (context, data) {
-          final (status, categories, difficulties, types) = data;
+        body: BlocBuilder<QuestionManageBloc, QuestionManageState>(
+          builder: (context, state) {
+            if (state.status == QuestionManageStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          // Show loading when any of the required data is being fetched
-          if (status == QuestionManageStatus.loading ||
-              (status == QuestionManageStatus.initial && !_isInitialized)) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+            if (state.categoryList == null ||
+                state.questionDifficultyList == null ||
+                state.questionTypeList == null) {
+              return _buildErrorState();
+            }
 
-          // Show error if any of the required data is missing
-          if (categories == null || difficulties == null || types == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Failed to load required data',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _loadInitialData,
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
+            return _buildEditForm(state, isDark);
+          },
+        ),
+      ),
+    );
+  }
 
-          // Show the form when all data is available
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: isDark
-                    ? [Colors.grey[900]!, Colors.grey[850]!]
-                    : [Colors.grey[100]!, Colors.grey[50]!],
-              ),
-            ),
-            child: Stack(
-              children: [
-                EditQuestionForm(
-                  questionDifficultyList: difficulties,
-                  questionCategoryList: categories,
-                  questionTypeList: types,
-                  formKey: _formKey,
-                  controller: _controller,
-                ),
-                EditPreviewButton(
-                  formKey: _formKey,
-                  controller: _controller,
-                ),
-              ],
-            ),
-          );
-        },
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Failed to load required data',
+            style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () =>
+                context.read<QuestionManageBloc>().add(FetchQuestionData()),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditForm(QuestionManageState state, bool isDark) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: isDark
+              ? [Colors.grey[900]!, Colors.grey[850]!]
+              : [Colors.grey[100]!, Colors.grey[50]!],
+        ),
+      ),
+      child: Stack(
+        children: [
+          EditQuestionForm(
+            options: widget.questionModel.options,
+            correctAnswerId: widget.questionModel.correctAnswerId,
+            questionDifficultyList: state.questionDifficultyList!,
+            questionCategoryList: state.categoryList!,
+            questionTypeList: state.questionTypeList!,
+            formKey: _formKey,
+            controller: _controller,
+          ),
+          EditPreviewButton(
+            questionId: widget.questionModel.id??0,
+            difficultyName: state.questionDifficultyList
+                ?.firstWhere(
+                  (difficulty) =>
+                      difficulty.id.toString() == _controller.difficulty,
+                  orElse: () => DifficultyModel(),
+                )
+                .name,
+            categoryName: state.categoryList
+                ?.firstWhere(
+                  (category) => category.id.toString() == _controller.category,
+                  orElse: () => CategoryModel(),
+                )
+                .name,
+            questionTypeName: state.questionTypeList
+                ?.firstWhere(
+                  (questionType) =>
+                      questionType.id.toString() == _controller.category,
+                  orElse: () => QuestionTypeModel(),
+                )
+                .name,
+            formKey: _formKey,
+            controller: _controller,
+          ),
+        ],
       ),
     );
   }

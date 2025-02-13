@@ -21,5 +21,12 @@ abstract class QuestionManageRepository {
       required String selectedQuestionCategory,
       required String selectedDifficultyId});
 
+  Future<Either<Failure, QuestionDetailModel>> editQuestion(
+      {required String question,
+        required String correctAnswer,
+        required String selectedQuestionType,
+        required List<Option> options,
+        required String selectedQuestionCategory,
+        required String selectedDifficultyId,required int questionId});
   Future<Either<Failure, List<QuizQuestionModel>>> getAllQuestions();
 }

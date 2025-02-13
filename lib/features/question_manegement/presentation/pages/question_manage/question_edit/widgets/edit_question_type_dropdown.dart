@@ -25,7 +25,7 @@ class EditQuestionTypeDropdown extends StatelessWidget {
       selector: (state) => state.selectedQuestionTypeId?.toString(),
       builder: (context, selectedQuestionTypeId) {
         return DropdownButtonFormField<String>(
-          value: selectedQuestionTypeId,
+          value:  controller.questionType,
           onChanged: (value) {
             if (value != null) {
               context.read<QuestionManageBloc>().add(SelectQuestionTypeId(questiontypeId: value));

@@ -12,7 +12,7 @@ class QuestionDetailModel {
   String? questionTypeName;
   dynamic categoryId;
   dynamic difficultyId;
-  List<Option>? options;
+  List<Options>? options;
   String? createdBy;
   DateTime? createdTime;
 
@@ -36,16 +36,16 @@ class QuestionDetailModel {
 
   Map<String, dynamic> toJson() => _$QuestionDetailModelToJson(this);
 }
-class Option {
+class Options {
   int? id;
   String? text;
 
-  Option({
+  Options({
     this.id,
     this.text,
   });
 
-  factory Option.fromJson(Map<String, dynamic> json) => Option(
+  factory Options.fromJson(Map<String, dynamic> json) => Options(
     id: json["id"],
     text: json["text"],
   );

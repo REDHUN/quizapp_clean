@@ -9,11 +9,16 @@ import '../preview/question_preview_dialog.dart';
 class EditPreviewButton extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final EditQuestionController controller;
-
+  final String? categoryName;
+  final String? difficultyName;
+  final String? questionTypeName;
+  final int questionId;
   const EditPreviewButton({
     super.key,
     required this.formKey,
-    required this.controller,
+    required this.controller, required this.questionTypeName,
+    required this.categoryName,
+    required this.difficultyName,required this.questionId
   });
 
   void _showValidationError(BuildContext context, String message) {
@@ -65,8 +70,8 @@ class EditPreviewButton extends StatelessWidget {
                     context,
                     'Please select a correct answer',
                   );
-                } else if (controller.options
-                        .where((o) => o.isNotEmpty)
+                } else if ((controller.options??[])
+                        .where((o) => o.text?.isNotEmpty??false)
                         .length <
                     2) {
                   _showValidationError(
@@ -77,11 +82,15 @@ class EditPreviewButton extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (_) => EditQuestionPreviewDialog(
+                      questionId: questionId,
+                      categoryName: categoryName,
+                      difficultyName: difficultyName,
+                      questionTypeName: questionTypeName,
                       question: controller.questionText,
                       category: controller.category,
                       difficulty: controller.difficulty,
                       questionType: controller.questionType,
-                      options: controller.options,
+                      options: controller.options??[],
                       correctAnswerIndex: controller.correctAnswerIndex,
                     ),
                   );

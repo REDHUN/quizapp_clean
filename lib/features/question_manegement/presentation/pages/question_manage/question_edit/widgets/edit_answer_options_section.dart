@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_edit/controllers/editquestion_controller.dart';
 import 'edit_section_card.dart';
@@ -7,11 +8,15 @@ import 'edit_section_card.dart';
 class EditAnswerOptionsSection extends StatefulWidget {
   final EditQuestionController controller;
   final String? Function(String?)? validator;
+  final List<Option> ? options;
+  final int ? correctAnswerId;
 
   const EditAnswerOptionsSection({
     super.key,
     required this.controller,
     this.validator,
+ this.options,
+    this.correctAnswerId
   });
 
   @override
@@ -23,11 +28,15 @@ class _EditAnswerOptionsSectionState extends State<EditAnswerOptionsSection> {
   @override
   void initState() {
    _controllers = List.generate(
-      widget.controller.options.length,
+      widget.controller.options?.length??0,
           (index) => TextEditingController(),
     );
-   for(int i =0;i<  widget.controller.options.length;i++){
-     _controllers[i].text=  widget.controller.options[i];
+   for(int i =0;i<  (widget.controller.options?.length??0);i++){
+     if(widget.correctAnswerId==widget.options?[i].id){
+     widget.correctAnswerId==widget.options?[i].id;
+     widget.controller.correctAnswerIndex=i;
+     }
+     _controllers[i].text=  widget.controller.options?[i].text??"";
    }
     super.initState();
   }
@@ -42,7 +51,7 @@ class _EditAnswerOptionsSectionState extends State<EditAnswerOptionsSection> {
       child: Column(
         children: [
           ...List.generate(
-            widget.controller.options.length,
+            widget.controller.options?.length??0,
             (index) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
@@ -62,7 +71,7 @@ class _EditAnswerOptionsSectionState extends State<EditAnswerOptionsSection> {
                     child: TextFormField(
                       controller: _controllers[index],
                       onChanged: (value) {
-                        widget.controller.options[index] = value;
+                        widget.controller.options?[index].text= value;
                       },
                       validator: widget.validator,
                       decoration: InputDecoration(

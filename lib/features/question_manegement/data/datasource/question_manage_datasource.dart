@@ -65,6 +65,44 @@ class QuestionManageDatasource {
     return questionDetailModel;
   }
 
+  Future<QuestionDetailModel> editQuestion(
+      {required String question,
+        required String correctAnswer,
+        required String selectedQuestionType,
+        required List<Option> options,
+        required String selectedQuestionCategory,
+        required String selectedDifficultyId,required int questionId}) async {
+
+
+    final userName = await SharedPrefs.getName();
+    Map<String, dynamic> queryParameter =
+
+    {
+      "id": questionId,
+      "question": question,
+      "correctAnswerId": correctAnswer,
+      "questionTypeId": selectedQuestionType,
+      "categoryId": selectedQuestionCategory,
+      "difficultyId":selectedDifficultyId,
+      "options": options,
+      "createdBy": userName
+
+    };
+
+
+
+
+
+
+    var request =
+    await dio.put("/api/admin/questions/update/$questionId", data: queryParameter);
+
+    QuestionDetailModel questionDetailModel =
+    QuestionDetailModel.fromJson(request.data);
+
+    return questionDetailModel;
+  }
+
   Future<List<QuizQuestionModel>> getAllQuestions() async {
     var request = await dio.get(
       "api/questions/getAllQuestions",

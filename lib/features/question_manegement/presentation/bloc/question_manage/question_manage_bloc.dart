@@ -9,15 +9,16 @@ class QuestionManageBloc
 
   QuestionManageBloc({required this.questionManageRepository})
       : super(QuestionManageState.initial()) {
-    on<GetQuestionCategory>(onGetQuestionCategory);
-    on<GetQuestionDifficulty>(onGetQuestionDifficulty);
-    on<GetQuestionType>(onGetQuestionType);
-    on<SelectQuestionCategory>(onSelectQuestionCategory);
-    on<SelectQuestionDifficulty>(onSelectQuestionDifficulty);
-    on<SelectQuestionTypeId>(onSelectQuestionTypeId);
-    on<SubmitQuestion>(onSubmitQuestion);
-    on<ResetQuestionManageState>(onResetQuestionManageState);
-    on<GetAllQuestions>(onGetAllQuestions);
+    on<FetchQuestionData>(_onFetchQuestionData);
+    on<GetAllQuestions>(_onGetAllQuestions);
+    on<SelectQuestionCategory>((event, emit) =>
+        emit(state.copyWith(selectedCategoryId: event.categoryId)));
+    on<SelectQuestionDifficulty>((event, emit) =>
+        emit(state.copyWith(selectedDifficultyId: event.difficultyId)));
+    on<SelectQuestionTypeId>((event, emit) =>
+        emit(state.copyWith(selectedQuestionTypeId: event.questiontypeId)));
+    on<SubmitQuestion>(_onSubmitQuestion);
+    on<EditQuestion>(_onEditQuestion);
   }
 
   Future onGetQuestionCategory(GetQuestionCategory event, Emitter emit) async {
@@ -71,12 +72,36 @@ class QuestionManageBloc
     emit(state.copyWith(selectedDifficultyId: event.difficultyId));
   }
 
+  void _onFetchQuestionData(
+      FetchQuestionData event, Emitter<QuestionManageState> emit) async {
+    emit(state.copyWith(status: QuestionManageStatus.loading));
+
+    var categoryData = await questionManageRepository.getQuestionCategory();
+    var difficultyData = await questionManageRepository.getQuestionDifficulty();
+    var typeData = await questionManageRepository.getQuestionType();
+
+    if (categoryData.isRight() &&
+        difficultyData.isRight() &&
+        typeData.isRight()) {
+      emit(state.copyWith(
+        status: QuestionManageStatus.success,
+        categoryList: categoryData.right,
+        questionDifficultyList: difficultyData.right,
+        questionTypeList: typeData.right,
+      ));
+    } else {
+      emit(state.copyWith(
+          status: QuestionManageStatus.error,
+          errorMessage: "Failed to fetch data. Please try again."));
+    }
+  }
+
   void onSelectQuestionTypeId(
       SelectQuestionTypeId event, Emitter<QuestionManageState> emit) {
     emit(state.copyWith(selectedQuestionTypeId: event.questiontypeId));
   }
 
-  Future onSubmitQuestion(SubmitQuestion event, Emitter emit) async {
+  Future _onSubmitQuestion(SubmitQuestion event, Emitter emit) async {
     emit(state.copyWith(status: QuestionManageStatus.loading));
     var data = await questionManageRepository.submitQuestion(
         question: event.question,
@@ -92,11 +117,35 @@ class QuestionManageBloc
       emit(state.copyWith(status: QuestionManageStatus.questionSubmitSuccess));
     } else {
       emit(state.copyWith(
-          status: QuestionManageStatus.questionSubmitError, errorMessage: data.left.message));
+          status: QuestionManageStatus.questionSubmitError,
+          errorMessage: data.left.message));
     }
   }
 
-  Future onGetAllQuestions(GetAllQuestions event, Emitter emit) async {
+  Future _onEditQuestion(EditQuestion event, Emitter emit) async {
+    emit(state.copyWith(status: QuestionManageStatus.loading));
+    var data = await questionManageRepository.editQuestion(
+        question: event.question,
+        correctAnswer: event.correctAnswer,
+        selectedQuestionType: event.questionTypeId ?? "",
+        options: event.options,
+        selectedQuestionCategory: event.questionDifficultyId?? "",
+        selectedDifficultyId: event.questionDifficultyId ?? "",
+
+        questionId: event.questionId);
+
+    if (data.isRight()) {
+      emit(state.copyWith(status: QuestionManageStatus.questionSubmitSuccess));
+
+      emit(state.copyWith(status: QuestionManageStatus.questionSubmitSuccess));
+    } else {
+      emit(state.copyWith(
+          status: QuestionManageStatus.questionSubmitError,
+          errorMessage: data.left.message));
+    }
+  }
+
+  Future _onGetAllQuestions(GetAllQuestions event, Emitter emit) async {
     emit(state.copyWith(status: QuestionManageStatus.loading));
     var data = await questionManageRepository.getAllQuestions();
 
@@ -109,12 +158,9 @@ class QuestionManageBloc
           status: QuestionManageStatus.error, errorMessage: data.left.message));
     }
   }
-  void onResetQuestionManageState(ResetQuestionManageState event, Emitter<QuestionManageState> emit) {
+
+  void onResetQuestionManageState(
+      ResetQuestionManageState event, Emitter<QuestionManageState> emit) {
     emit(QuestionManageState.initial());
   }
-
 }
-
-
-
-
