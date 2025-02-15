@@ -112,4 +112,16 @@ class QuestionManageRepositoryImpl implements QuestionManageRepository {
       return Either.left(AuthFailure(message: " Get Question Type Failure"));
     }
   }
+
+  @override
+  Future<Either<Failure, int>> deleteQuestion({required int questionId}) async{
+    try {
+      final request = await questionManageDatasource.deleteQuestion(questionId: questionId);
+      return Either.right(request);
+    } on DioException catch (e) {
+      return Either.left(DioErrorHandler.handleDioError(e));
+    } on Exception catch (e) {
+      return Either.left(AuthFailure(message: "Delete Question Failure"));
+    }
+  }
 }

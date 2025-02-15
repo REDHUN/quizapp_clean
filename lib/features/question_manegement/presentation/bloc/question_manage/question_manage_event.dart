@@ -35,19 +35,28 @@ class SubmitQuestion extends QuestionManageEvent {
   final String  question;
   final String correctAnswer;
   final List<String>options;
+  final String ? questionTypeId;
+  final String ? questionCategoryId;
+  final String ? questionDifficultyId;
 
-  SubmitQuestion({required this.question,required this.correctAnswer,required this.options});
+  SubmitQuestion({required this.question,required this.correctAnswer,required this.options, this.questionTypeId, this.questionCategoryId,this.questionDifficultyId});
 }
 class EditQuestion extends QuestionManageEvent {
   final String  question;
   final String correctAnswer;
   final List<Option>options;
   final int questionId;
-  final String questionTypeId;
-  final String questionCategoryId;
-  final String questionDifficultyId;
+  final String ?questionTypeId;
+  final String ?questionCategoryId;
+  final String? questionDifficultyId;
 
-  EditQuestion({required this.question,required this.correctAnswer,required this.options,required this.questionId,required this.questionTypeId,required this.questionCategoryId,required this.questionDifficultyId});
+  EditQuestion({required this.question,required this.correctAnswer,required this.options,required this.questionId, this.questionTypeId,this.questionCategoryId,this.questionDifficultyId});
 }
 class ResetQuestionManageState extends QuestionManageEvent {}
 class GetAllQuestions extends QuestionManageEvent {}
+class DeleteQuestion extends QuestionManageEvent {
+  final int questionId;
+
+  DeleteQuestion({required this.questionId});
+
+}

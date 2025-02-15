@@ -11,6 +11,7 @@ enum QuestionManageStatus {
   error,
   questionSubmitSuccess,
   questionSubmitError,
+  questionDeleteSuccess,
 }
 
 class QuestionManageState extends Equatable {
@@ -69,7 +70,7 @@ class QuestionManageState extends Equatable {
         selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
         selectedDifficultyId: selectedDifficultyId ?? this.selectedDifficultyId,
         selectedQuestionTypeId:
-            selectedDifficultyId ?? this.selectedQuestionTypeId,
+            selectedQuestionTypeId ?? this.selectedQuestionTypeId,
         options: options ?? this.options,
         correctAnswer: correctAnswer ?? this.correctAnswer,
         question: question ?? this.question,

@@ -7,6 +7,7 @@ import 'package:game_app/features/question_manegement/presentation/bloc/question
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_event.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_state.dart';
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_create/widgets/success_dialog.dart';
+import 'package:game_app/core/ui/common_success_dialog.dart';
 
 class EditQuestionPreviewDialog extends StatelessWidget {
   final String? question;
@@ -35,7 +36,7 @@ class EditQuestionPreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
+print("Question Type :${questionType}");
     return Dialog(
       backgroundColor: Colors.transparent,
       child: TweenAnimationBuilder<double>(
@@ -191,11 +192,11 @@ class EditQuestionPreviewDialog extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     if (questionType != null)
-                      _buildChip(questionTypeName!, AppColors.primary, Icons.quiz),
+                      _buildChip(questionTypeName??"", AppColors.primary, Icons.quiz),
                     if (category != null)
-                      _buildChip(categoryName!, AppColors.success, Icons.category),
+                      _buildChip(categoryName??"", AppColors.success, Icons.category),
                     if (difficulty != null)
-                      _buildChip(difficultyName!, AppColors.warning,
+                      _buildChip(difficultyName??"", AppColors.warning,
                           Icons.signal_cellular_alt),
                   ],
                 ),
@@ -380,7 +381,15 @@ class EditQuestionPreviewDialog extends StatelessWidget {
                 Navigator.pop(context);
                 showDialog(
                   context: context,
-                  builder: (_) => const QuestionSuccessDialog(),
+                  builder: (context) => CommonSuccessDialog(
+                    title: 'Success!',
+                    message: 'Your question has been edited successfully.',
+                    onConfirm: () {
+                      Navigator.of(context).pop(); // Close dialog
+                      Navigator.of(context)
+                          .pop(true); // Go back to previous screen // Close dialog or perform any action
+                    },
+                  ),
                 );
               } else if (state.status ==
                   QuestionManageStatus.questionSubmitError) {

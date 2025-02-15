@@ -114,6 +114,8 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
       ),
       child: Stack(
         children: [
+          
+
           EditQuestionForm(
             options: widget.questionModel.options,
             correctAnswerId: widget.questionModel.correctAnswerId,
@@ -123,28 +125,12 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
             formKey: _formKey,
             controller: _controller,
           ),
+
           EditPreviewButton(
             questionId: widget.questionModel.id??0,
-            difficultyName: state.questionDifficultyList
-                ?.firstWhere(
-                  (difficulty) =>
-                      difficulty.id.toString() == _controller.difficulty,
-                  orElse: () => DifficultyModel(),
-                )
-                .name,
-            categoryName: state.categoryList
-                ?.firstWhere(
-                  (category) => category.id.toString() == _controller.category,
-                  orElse: () => CategoryModel(),
-                )
-                .name,
-            questionTypeName: state.questionTypeList
-                ?.firstWhere(
-                  (questionType) =>
-                      questionType.id.toString() == _controller.category,
-                  orElse: () => QuestionTypeModel(),
-                )
-                .name,
+            questionDifficultyList: state.questionDifficultyList!,
+            questionCategoryList: state.categoryList!,
+            questionTypeList: state.questionTypeList!,
             formKey: _formKey,
             controller: _controller,
           ),

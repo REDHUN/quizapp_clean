@@ -7,6 +7,7 @@ import 'package:game_app/features/question_manegement/presentation/pages/questio
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_view/question_view_screen.dart';
 import 'package:game_app/features/quiz/presentation/pages/home_page.dart';
 import 'package:game_app/features/quiz/presentation/pages/quiz/quiz_screen.dart';
+import 'package:game_app/features/quiz_management/presentation/pages/quiz_management_screen.dart';
 import 'package:game_app/features/quiz_report/presentation/pages/quiz_report/quiz_history_screen.dart';
 import 'package:game_app/splash_page.dart';
 import 'package:go_router/go_router.dart';
@@ -75,5 +76,12 @@ class AppRouter {
     //     return EditQuestionScreen();
     //   },
     // ),
+
+    GoRoute(
+      path: QuizManagementScreen.route,
+      builder: (context, state) {
+        return QuizManagementScreen();
+      },
+    ),
   ]);
 }

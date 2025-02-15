@@ -67,38 +67,29 @@ class QuestionManageDatasource {
 
   Future<QuestionDetailModel> editQuestion(
       {required String question,
-        required String correctAnswer,
-        required String selectedQuestionType,
-        required List<Option> options,
-        required String selectedQuestionCategory,
-        required String selectedDifficultyId,required int questionId}) async {
-
-
+      required String correctAnswer,
+      required String selectedQuestionType,
+      required List<Option> options,
+      required String selectedQuestionCategory,
+      required String selectedDifficultyId,
+      required int questionId}) async {
     final userName = await SharedPrefs.getName();
-    Map<String, dynamic> queryParameter =
-
-    {
+    Map<String, dynamic> queryParameter = {
       "id": questionId,
       "question": question,
       "correctAnswerId": correctAnswer,
       "questionTypeId": selectedQuestionType,
       "categoryId": selectedQuestionCategory,
-      "difficultyId":selectedDifficultyId,
+      "difficultyId": selectedDifficultyId,
       "options": options,
       "createdBy": userName
-
     };
 
-
-
-
-
-
-    var request =
-    await dio.put("/api/admin/questions/update/$questionId", data: queryParameter);
+    var request = await dio.put("/api/admin/questions/update/$questionId",
+        data: queryParameter);
 
     QuestionDetailModel questionDetailModel =
-    QuestionDetailModel.fromJson(request.data);
+        QuestionDetailModel.fromJson(request.data);
 
     return questionDetailModel;
   }
@@ -113,5 +104,13 @@ class QuestionManageDatasource {
         dataList.map((data) => QuizQuestionModel.fromJson(data)).toList();
 
     return questionList;
+  }
+
+  Future<int> deleteQuestion({required int questionId}) async {
+    var request = await dio.delete(
+      "/api/admin/questions/deleteQuestion/$questionId",
+    );
+
+    return request.data;
   }
 }

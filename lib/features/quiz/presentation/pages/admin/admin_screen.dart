@@ -4,6 +4,7 @@ import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/core/theme/grediant.dart';
 import 'package:game_app/features/create_quiz/presentation/pages/create_quiz_screen.dart';
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_manage_screen.dart';
+import 'package:game_app/features/quiz_management/presentation/pages/quiz_management_screen.dart';
 
 import 'widgets/admin_stat_card.dart';
 import 'widgets/quiz_management_card.dart';
@@ -149,13 +150,13 @@ class AdminScreen extends StatelessWidget {
             children: [
               _buildActionCard(
                 context,
-                title: 'Create Quiz',
-                subtitle: 'Add new quiz',
+                title: 'Quiz Management',
+                subtitle: 'Manage quiz',
                 icon: Icons.add_circle_outline,
                 gradient: actionGradients[0],
                 onTap: () {
 
-                  AppRouter.router.push(CreateQuizScreen.route);
+                  AppRouter.router.push(QuizManagementScreen.route);
                 },
               ),
               _buildActionCard(

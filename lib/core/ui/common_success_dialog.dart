@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 
-class EditQuestionSuccessDialog extends StatelessWidget {
-  const EditQuestionSuccessDialog({super.key});
+class CommonSuccessDialog extends StatelessWidget {
+  final String title;
+  final String message;
+  final VoidCallback onConfirm;
+
+  const CommonSuccessDialog({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,16 +52,16 @@ class EditQuestionSuccessDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'Question Created!',
-                    style: TextStyle(
+                  Text(
+                    title,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Your question has been successfully created',
+                    message,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context)
@@ -67,9 +76,8 @@ class EditQuestionSuccessDialog extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop(); // Close dialog
-                          Navigator.of(context)
-                              .pop(); // Go back to previous screen
+
+                          onConfirm();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.success,
@@ -83,13 +91,6 @@ class EditQuestionSuccessDialog extends StatelessWidget {
                           ),
                         ),
                         child: const Text('Done'),
-                      ),
-                      const SizedBox(width: 12),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Add Another'),
                       ),
                     ],
                   ),

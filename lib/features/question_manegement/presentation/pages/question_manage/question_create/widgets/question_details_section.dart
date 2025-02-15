@@ -32,6 +32,7 @@ class QuestionDetailsSection extends StatelessWidget {
               value: selectedCategoryId,
               onChanged: (value) {
                 if (value != null) {
+                  controller.categoryId=value;
                   context.read<QuestionManageBloc>().add(SelectQuestionCategory(categoryId: value));
                 }
               },
@@ -63,6 +64,7 @@ class QuestionDetailsSection extends StatelessWidget {
               value: selectedDifficultyId,
               onChanged: (value) {
                 if (value != null) {
+                  controller.difficultyId=value;
                   context.read<QuestionManageBloc>().add(SelectQuestionDifficulty(difficultyId: value));
                 }
               },

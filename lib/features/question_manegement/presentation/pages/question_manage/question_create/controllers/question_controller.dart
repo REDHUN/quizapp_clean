@@ -1,15 +1,22 @@
 class QuestionController {
   String? questionText;
-  String category = 'General Knowledge'; // Default value
-  String difficulty = 'Easy'; // Default value
-  String questionType = 'Multiple Choice'; // Default value
+  String ?category ;// Default value
+  String ? difficulty ;
+  String ?questionType;
+  String? categoryId;
+  String? difficultyId;
+  String? questionTypeId;
+
   List<String> options = List.filled(4, '');
   int? correctAnswerIndex;
 
   QuestionController() {
     // Initialize with default values
-    category = 'General Knowledge';
-    difficulty = 'Easy';
-    questionType = 'Multiple Choice';
+    category;
+    difficulty;
+    questionType;
+    questionTypeId;
+    categoryId;
+    difficultyId;
   }
 }

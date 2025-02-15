@@ -28,6 +28,7 @@ class EditQuestionTypeDropdown extends StatelessWidget {
           value:  controller.questionType,
           onChanged: (value) {
             if (value != null) {
+              controller.questionType=value;
               context.read<QuestionManageBloc>().add(SelectQuestionTypeId(questiontypeId: value));
             }
           },

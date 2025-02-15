@@ -12,6 +12,9 @@ class QuestionPreviewDialog extends StatelessWidget {
   final String? category;
   final String? difficulty;
   final String? questionType;
+  final String? categoryId;
+  final String? difficultyId;
+  final String? questionTypeId;
   final List<String> options;
   final int? correctAnswerIndex;
 
@@ -23,10 +26,13 @@ class QuestionPreviewDialog extends StatelessWidget {
     this.questionType,
     this.options = const [],
     this.correctAnswerIndex,
+    this.questionTypeId,this.categoryId,this.difficultyId
   });
 
   @override
   Widget build(BuildContext context) {
+
+    print("question type : ${questionTypeId}");
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Dialog(
@@ -378,6 +384,9 @@ class QuestionPreviewDialog extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () {
                 context.read<QuestionManageBloc>().add(SubmitQuestion(
+                  questionCategoryId: categoryId,
+                      questionDifficultyId: difficultyId,
+                      questionTypeId: questionTypeId,
                       question: question,
                       correctAnswer: correctAnswer,
                       options: options,

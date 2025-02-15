@@ -29,4 +29,5 @@ abstract class QuestionManageRepository {
         required String selectedQuestionCategory,
         required String selectedDifficultyId,required int questionId});
   Future<Either<Failure, List<QuizQuestionModel>>> getAllQuestions();
+  Future<Either<Failure, int>> deleteQuestion({required int questionId});
 }

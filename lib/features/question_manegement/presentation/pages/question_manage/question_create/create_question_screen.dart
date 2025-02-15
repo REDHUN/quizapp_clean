@@ -100,6 +100,10 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
                 controller: _controller,
               ),
               PreviewButton(
+                questionDifficultyList: difficulties ?? [], // Provide an empty list if null
+                questionCategoryList: categories ?? [], // Provide an empty list if null
+                questionTypeList: types ?? [], // Provide an empty list if null
+
                 formKey: _formKey,
                 controller: _controller,
               ),

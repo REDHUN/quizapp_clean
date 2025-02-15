@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:game_app/core/theme/app_colors.dart';
+import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
+import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
+import 'package:game_app/features/question_manegement/domain/model/question_type_model/question_type_model.dart';
 
 import '../controllers/editquestion_controller.dart';
 import '../preview/question_preview_dialog.dart';
@@ -9,16 +12,19 @@ import '../preview/question_preview_dialog.dart';
 class EditPreviewButton extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final EditQuestionController controller;
-  final String? categoryName;
-  final String? difficultyName;
-  final String? questionTypeName;
+  final List<QuestionTypeModel> questionTypeList;
+  final List<CategoryModel> questionCategoryList;
+  final List<DifficultyModel> questionDifficultyList;
   final int questionId;
   const EditPreviewButton({
     super.key,
     required this.formKey,
-    required this.controller, required this.questionTypeName,
-    required this.categoryName,
-    required this.difficultyName,required this.questionId
+    required this.controller,
+    required this.questionTypeList,
+    required this.questionCategoryList,
+    required this.questionDifficultyList,
+
+   required this.questionId
   });
 
   void _showValidationError(BuildContext context, String message) {
@@ -83,9 +89,26 @@ class EditPreviewButton extends StatelessWidget {
                     context: context,
                     builder: (_) => EditQuestionPreviewDialog(
                       questionId: questionId,
-                      categoryName: categoryName,
-                      difficultyName: difficultyName,
-                      questionTypeName: questionTypeName,
+                      difficultyName: questionDifficultyList
+                          .firstWhere(
+                            (difficulty) =>
+                        difficulty.id.toString() == controller.difficulty,
+                        orElse: () => DifficultyModel(),
+                      )
+                          .name,
+                      categoryName: questionCategoryList
+                          .firstWhere(
+                            (category) => category.id.toString() == controller.category,
+                        orElse: () => CategoryModel(),
+                      )
+                          .name,
+                      questionTypeName: questionTypeList
+                          .firstWhere(
+                            (questionType) =>
+                        questionType.id.toString() == controller.questionType,
+                        orElse: () => QuestionTypeModel(),
+                      )
+                          .name,
                       question: controller.questionText,
                       category: controller.category,
                       difficulty: controller.difficulty,

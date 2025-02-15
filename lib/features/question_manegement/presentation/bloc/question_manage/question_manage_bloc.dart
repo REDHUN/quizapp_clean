@@ -19,6 +19,7 @@ class QuestionManageBloc
         emit(state.copyWith(selectedQuestionTypeId: event.questiontypeId)));
     on<SubmitQuestion>(_onSubmitQuestion);
     on<EditQuestion>(_onEditQuestion);
+    on<DeleteQuestion>(_onDeleteQuestion);
   }
 
   Future onGetQuestionCategory(GetQuestionCategory event, Emitter emit) async {
@@ -65,6 +66,7 @@ class QuestionManageBloc
   void onSelectQuestionCategory(
       SelectQuestionCategory event, Emitter<QuestionManageState> emit) {
     emit(state.copyWith(selectedCategoryId: event.categoryId));
+    print("ssssss");
   }
 
   void onSelectQuestionDifficulty(
@@ -99,6 +101,8 @@ class QuestionManageBloc
   void onSelectQuestionTypeId(
       SelectQuestionTypeId event, Emitter<QuestionManageState> emit) {
     emit(state.copyWith(selectedQuestionTypeId: event.questiontypeId));
+    print("ssssss");
+
   }
 
   Future _onSubmitQuestion(SubmitQuestion event, Emitter emit) async {
@@ -106,10 +110,10 @@ class QuestionManageBloc
     var data = await questionManageRepository.submitQuestion(
         question: event.question,
         correctAnswer: event.correctAnswer,
-        selectedQuestionType: state.selectedQuestionTypeId ?? "",
+        selectedQuestionType: event.questionTypeId ?? "",
         options: event.options,
-        selectedQuestionCategory: state.selectedCategoryId ?? "",
-        selectedDifficultyId: state.selectedDifficultyId ?? "");
+        selectedQuestionCategory: event.questionCategoryId ?? "",
+        selectedDifficultyId: event.questionDifficultyId ?? "");
 
     if (data.isRight()) {
       emit(state.copyWith(status: QuestionManageStatus.questionSubmitSuccess));
@@ -129,9 +133,8 @@ class QuestionManageBloc
         correctAnswer: event.correctAnswer,
         selectedQuestionType: event.questionTypeId ?? "",
         options: event.options,
-        selectedQuestionCategory: event.questionDifficultyId?? "",
+        selectedQuestionCategory: event.questionDifficultyId ?? "",
         selectedDifficultyId: event.questionDifficultyId ?? "",
-
         questionId: event.questionId);
 
     if (data.isRight()) {
@@ -156,6 +159,23 @@ class QuestionManageBloc
     } else {
       emit(state.copyWith(
           status: QuestionManageStatus.error, errorMessage: data.left.message));
+    }
+  }
+
+  Future _onDeleteQuestion(DeleteQuestion event, Emitter emit) async {
+    emit(state.copyWith(status: QuestionManageStatus.loading));
+    var data = await questionManageRepository.deleteQuestion(
+        questionId: event.questionId);
+
+    if (data.isRight()) {
+      print("object${data.right}");
+
+        emit(state.copyWith(status: QuestionManageStatus.questionDeleteSuccess));
+        print("the stat is ${state.status}");
+    } else {
+      emit(state.copyWith(
+          status: QuestionManageStatus.error, errorMessage: data.left.message));
+
     }
   }
 
