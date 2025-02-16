@@ -4,7 +4,7 @@ import 'package:game_app/core/model/either.dart';
 import 'package:game_app/core/model/question_detail_model.dart';
 import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/features/question_manegement/data/datasource/question_manage_datasource.dart';
-import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
+import 'package:game_app/core/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/question_type_model/question_type_model.dart';
 import 'package:game_app/features/question_manegement/domain/repository/question_manage_repository.dart';
@@ -122,6 +122,20 @@ class QuestionManageRepositoryImpl implements QuestionManageRepository {
       return Either.left(DioErrorHandler.handleDioError(e));
     } on Exception catch (e) {
       return Either.left(AuthFailure(message: "Delete Question Failure"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<QuizQuestionModel>>> getFilteredQuestions({String? questionCategoryId, String? questionTypeId, String? questionDifficultyId}) async{
+    try {
+      final request = await questionManageDatasource.getFilteredQuestions(questionTypeId: questionTypeId,questionDifficultyId: questionDifficultyId,questionCategoryId: questionCategoryId,);
+
+
+      return Either.right(request);
+    } on DioException catch (e) {
+      return Either.left(DioErrorHandler.handleDioError(e));
+    } on Exception catch (e) {
+      return Either.left(AuthFailure(message: " Get Questions  Failure"));
     }
   }
 }

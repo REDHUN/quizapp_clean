@@ -54,6 +54,14 @@ class EditQuestion extends QuestionManageEvent {
 }
 class ResetQuestionManageState extends QuestionManageEvent {}
 class GetAllQuestions extends QuestionManageEvent {}
+class GetFilteredQuestions extends QuestionManageEvent {
+  final String ?questionTypeId;
+  final String ?questionCategoryId;
+  final String? questionDifficultyId;
+
+  GetFilteredQuestions({required this.questionTypeId, required this.questionCategoryId, required this.questionDifficultyId});
+
+}
 class DeleteQuestion extends QuestionManageEvent {
   final int questionId;
 

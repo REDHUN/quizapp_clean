@@ -11,6 +11,7 @@ class QuestionManageBloc
       : super(QuestionManageState.initial()) {
     on<FetchQuestionData>(_onFetchQuestionData);
     on<GetAllQuestions>(_onGetAllQuestions);
+    on<GetFilteredQuestions>(_onGetFilteredQuestions);
     on<SelectQuestionCategory>((event, emit) =>
         emit(state.copyWith(selectedCategoryId: event.categoryId)));
     on<SelectQuestionDifficulty>((event, emit) =>
@@ -101,8 +102,6 @@ class QuestionManageBloc
   void onSelectQuestionTypeId(
       SelectQuestionTypeId event, Emitter<QuestionManageState> emit) {
     emit(state.copyWith(selectedQuestionTypeId: event.questiontypeId));
-    print("ssssss");
-
   }
 
   Future _onSubmitQuestion(SubmitQuestion event, Emitter emit) async {
@@ -162,20 +161,35 @@ class QuestionManageBloc
     }
   }
 
+  Future _onGetFilteredQuestions(
+      GetFilteredQuestions event, Emitter emit) async {
+    emit(state.copyWith(status: QuestionManageStatus.loading));
+    print("Question Difficulty id in event${event.questionDifficultyId}");
+    var data = await questionManageRepository.getFilteredQuestions(
+        questionCategoryId: event.questionCategoryId,
+        questionDifficultyId: event.questionDifficultyId,
+        questionTypeId: event.questionTypeId);
+
+    if (data.isRight()) {
+      emit(state.copyWith(status: QuestionManageStatus.success));
+
+      emit(state.copyWith(questionList: data.right));
+    } else {
+      emit(state.copyWith(
+          status: QuestionManageStatus.error, errorMessage: data.left.message));
+    }
+  }
+
   Future _onDeleteQuestion(DeleteQuestion event, Emitter emit) async {
     emit(state.copyWith(status: QuestionManageStatus.loading));
     var data = await questionManageRepository.deleteQuestion(
         questionId: event.questionId);
 
     if (data.isRight()) {
-      print("object${data.right}");
-
-        emit(state.copyWith(status: QuestionManageStatus.questionDeleteSuccess));
-        print("the stat is ${state.status}");
+      emit(state.copyWith(status: QuestionManageStatus.questionDeleteSuccess));
     } else {
       emit(state.copyWith(
           status: QuestionManageStatus.error, errorMessage: data.left.message));
-
     }
   }
 

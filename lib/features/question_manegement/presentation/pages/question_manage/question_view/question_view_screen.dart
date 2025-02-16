@@ -60,10 +60,10 @@ class _QuestionViewScreenState extends State<QuestionViewScreen> {
                         // Listen for successful deletion
                         if (state.status ==
                             QuestionManageStatus.questionDeleteSuccess) {
-                          print("Question Delete Successful");
+
                           context
                                     .read<QuestionManageBloc>()
-                                    .add(GetAllQuestions());
+                              .add(GetFilteredQuestions(questionTypeId: state.selectedQuestionTypeId, questionCategoryId: state.selectedCategoryId, questionDifficultyId: state.selectedDifficultyId));
 
                           // Show a success dialog
                     await      showDialog(
@@ -79,7 +79,7 @@ class _QuestionViewScreenState extends State<QuestionViewScreen> {
                                     .pop();
                                 context
                                     .read<QuestionManageBloc>()
-                                    .add(GetAllQuestions());// Go back to previous screen // Close dialog or perform any action
+                                    .add(GetFilteredQuestions(questionTypeId: state.selectedQuestionTypeId, questionCategoryId: state.selectedCategoryId, questionDifficultyId: state.selectedDifficultyId));// Go back to previous screen // Close dialog or perform any action
                               },
                             ),
                           );
@@ -144,8 +144,16 @@ class _QuestionViewScreenState extends State<QuestionViewScreen> {
                                             if (shouldRefresh == true) {
                                               context
                                                   .read<QuestionManageBloc>()
-                                                  .add(GetAllQuestions());
-                                              Navigator.of(context).pop();
+                                                        .add(GetFilteredQuestions(
+                                                            questionTypeId: state
+                                                                .selectedQuestionTypeId,
+                                                            questionCategoryId:
+                                                                state
+                                                                    .selectedCategoryId,
+                                                            questionDifficultyId:
+                                                                state
+                                                                    .selectedDifficultyId));
+                                                    Navigator.of(context).pop();
                                             }
                                           },
                                           onDelete: () {

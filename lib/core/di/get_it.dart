@@ -10,6 +10,10 @@ import 'package:game_app/features/create_quiz/data/datasource/create_quiz_dataso
 import 'package:game_app/features/create_quiz/data/repository_impl/create_quiz_repository_impl.dart';
 import 'package:game_app/features/create_quiz/domain/repository/quiz_create_repository.dart';
 import 'package:game_app/features/create_quiz/presentation/bloc/create_quiz_bloc.dart';
+import 'package:game_app/features/question_attributes_manage/data/datasource/question_attribute_datasource.dart';
+import 'package:game_app/features/question_attributes_manage/data/repository_impl/question_attribute_repository_impl.dart';
+import 'package:game_app/features/question_attributes_manage/domain/repository/question_attribute_repository.dart';
+import 'package:game_app/features/question_attributes_manage/presentation/bloc/question_attribute_bloc.dart';
 import 'package:game_app/features/question_manegement/data/datasource/question_manage_datasource.dart';
 import 'package:game_app/features/question_manegement/data/repository_impl/question_manage_repository_impl.dart';
 import 'package:game_app/features/question_manegement/domain/repository/question_manage_repository.dart';
@@ -50,6 +54,8 @@ void registerDataSource() {
   getIt.registerSingleton(CreateQuizDataSource(dio: dioWithTokenInterceptor));
   getIt.registerSingleton(
       QuestionManageDatasource(dio: dioWithTokenInterceptor));
+  getIt.registerSingleton(
+      QuestionAttributeDatasource(dio: dioWithTokenInterceptor));
 }
 
 void registerRepository() {
@@ -65,6 +71,8 @@ void registerRepository() {
       CreateQuizRepositoryImpl(createQuizDataSource: getIt()));
   getIt.registerSingleton<QuestionManageRepository>(
       QuestionManageRepositoryImpl(questionManageDatasource: getIt()));
+  getIt.registerSingleton<QuestionAttributeRepository>(
+      QuestionAttributeRepositoryImpl(questionCategoryDatasource: getIt()));
 }
 
 void registerBloc() {
@@ -83,7 +91,9 @@ void registerBloc() {
   getIt.registerFactory(
     () => QuestionManageBloc(questionManageRepository: getIt()),
   );
-
+  getIt.registerFactory(
+    () => QuestionAttributeBloc(questionAttributeRepository: getIt()),
+  );
   getIt.registerFactory(
     () => ThemeBloc(),
   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app/core/theme/app_colors.dart';
-import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
+import 'package:game_app/core/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/question_type_model/question_type_model.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_bloc.dart';
@@ -13,8 +13,8 @@ class QuestionFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuestionManageBloc, QuestionManageState>(
-      builder: (context, state) {
+    final bloc = context.read<QuestionManageBloc>();
+    final state = bloc.state;
         final selectedCategory = state.categoryList?.firstWhere(
               (category) => category.id.toString() == state.selectedCategoryId,
           orElse: () => CategoryModel(id: null, name: 'All'),
@@ -62,8 +62,8 @@ runSpacing: 10,
             ),
           ),
         );
-      },
-    );
+
+
   }
 
   Widget _buildFilterChip({
@@ -120,16 +120,18 @@ runSpacing: 10,
                 state.selectedCategoryId == "" || state.selectedCategoryId == null, // Check for "0" or null
                     () {
                   bloc.add(SelectQuestionCategory(categoryId: "")); // Use "0" for All
+                  bloc.add(GetFilteredQuestions(questionTypeId: state.selectedQuestionTypeId, questionCategoryId: "", questionDifficultyId: state.selectedDifficultyId));
                   Navigator.pop(context);
                 },
               ),
-              const Divider(),
+
               ...(state.categoryList?.map((category) => _buildDialogOption(
                 context,
                 category.name ?? "",
                 state.selectedCategoryId == category.id.toString(),
                     () {
                   bloc.add(SelectQuestionCategory(categoryId: category.id.toString()));
+                  bloc.add(GetFilteredQuestions(questionTypeId: state.selectedQuestionTypeId, questionCategoryId: category.id.toString(), questionDifficultyId: state.selectedDifficultyId));
                   Navigator.pop(context);
                 },
               )).toList() ?? []),
@@ -158,6 +160,7 @@ runSpacing: 10,
                 state.selectedQuestionTypeId == "" || state.selectedQuestionTypeId == null,
                     () {
                   bloc.add(SelectQuestionTypeId(questiontypeId: ""));
+                  bloc.add(GetFilteredQuestions(questionTypeId: "", questionCategoryId: state.selectedCategoryId, questionDifficultyId: state.selectedDifficultyId));
                   Navigator.pop(context);
                 },
               ),
@@ -168,6 +171,7 @@ runSpacing: 10,
                 state.selectedQuestionTypeId == questionType.id.toString(),
                     () {
                   bloc.add(SelectQuestionTypeId(questiontypeId: questionType.id.toString()));
+                  bloc.add(GetFilteredQuestions(questionTypeId: questionType.id.toString(), questionCategoryId: state.selectedCategoryId, questionDifficultyId: state.selectedDifficultyId));
                   Navigator.pop(context);
                 },
               )).toList() ?? []),
@@ -196,6 +200,7 @@ runSpacing: 10,
                 state.selectedDifficultyId == "" || state.selectedDifficultyId == null,
                     () {
                   bloc.add(SelectQuestionDifficulty(difficultyId: ""));
+                  bloc.add(GetFilteredQuestions(questionTypeId: state.selectedQuestionTypeId, questionCategoryId: state.selectedCategoryId, questionDifficultyId: ""));
                   Navigator.pop(context);
                 },
               ),
@@ -206,6 +211,7 @@ runSpacing: 10,
                 state.selectedDifficultyId == difficulty.id.toString(),
                     () {
                   bloc.add(SelectQuestionDifficulty(difficultyId: difficulty.id.toString()));
+                  bloc.add(GetFilteredQuestions(questionTypeId: state.selectedQuestionTypeId, questionCategoryId: state.selectedCategoryId, questionDifficultyId: difficulty.id.toString()));
                   Navigator.pop(context);
                 },
               )).toList() ?? []),

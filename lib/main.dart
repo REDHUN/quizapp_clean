@@ -7,6 +7,7 @@ import 'package:game_app/core/storage/shared_prefs.dart';
 import 'package:game_app/core/theme/app_theme.dart';
 import 'package:game_app/features/auth/presentation/bloc/user_bloc.dart';
 import 'package:game_app/features/create_quiz/presentation/bloc/create_quiz_bloc.dart';
+import 'package:game_app/features/question_attributes_manage/presentation/bloc/question_attribute_bloc.dart';
 import 'package:game_app/features/question_manegement/presentation/bloc/question_manage/question_manage_bloc.dart';
 import 'package:game_app/features/quiz/presentation/bloc/theme/theme_state.dart';
 import 'package:game_app/features/quiz_report/presentation/bloc/quiz_report_bloc.dart';
@@ -40,6 +41,9 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => getIt<QuestionManageBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<QuestionAttributeBloc>(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

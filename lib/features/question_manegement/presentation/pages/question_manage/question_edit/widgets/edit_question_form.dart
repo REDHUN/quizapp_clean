@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_app/core/model/quiz_question_model/quiz_question_model.dart';
 import 'package:game_app/core/theme/app_colors.dart';
-import 'package:game_app/features/question_manegement/domain/model/category_model/category_model.dart';
+import 'package:game_app/core/model/category_model/category_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/difficaulty_model/difficulty_model.dart';
 import 'package:game_app/features/question_manegement/domain/model/question_type_model/question_type_model.dart';
 

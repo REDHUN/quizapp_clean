@@ -3,6 +3,7 @@ import 'package:game_app/core/router/app_router.dart';
 import 'package:game_app/core/theme/app_colors.dart';
 import 'package:game_app/core/theme/grediant.dart';
 import 'package:game_app/features/create_quiz/presentation/pages/create_quiz_screen.dart';
+import 'package:game_app/features/question_attributes_manage/presentation/pages/question_attribute_manage_screen.dart';
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_manage_screen.dart';
 import 'package:game_app/features/quiz_management/presentation/pages/quiz_management_screen.dart';
 
@@ -180,12 +181,14 @@ class AdminScreen extends StatelessWidget {
               ),
               _buildActionCard(
                 context,
-                title: 'Categories',
-                subtitle: 'Manage topics',
+                title: 'Question Attributes',
+                subtitle: 'Manage Question Attributes',
                 icon: Icons.category_outlined,
                 gradient: actionGradients[2],
                 badge: '8',
-                onTap: () {},
+                onTap: () {
+                  AppRouter.router.push(QuestionAttributeScreen.route);
+                },
               ),
               _buildActionCard(
                 context,
