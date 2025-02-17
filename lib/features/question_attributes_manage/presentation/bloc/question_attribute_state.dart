@@ -8,6 +8,7 @@ enum QuestionAttributeStatus {
   loading,
   success,
   error,
+  categoryAdding
 }
 
 class QuestionAttributeState extends Equatable {

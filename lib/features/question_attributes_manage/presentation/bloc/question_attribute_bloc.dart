@@ -29,16 +29,41 @@ class QuestionAttributeBloc
     }
   }
   Future onAddQuestionCategory(AddQuestionCategory event, Emitter emit) async {
-    emit(state.copyWith(status: QuestionAttributeStatus.loading));
-    var data = await questionAttributeRepository.addQuestionCategory(categoryName: event.categoryName, categoryId: event.categoryId);
+    emit(state.copyWith(status: QuestionAttributeStatus.loading,  categoryList: state.categoryList,));
 
-    if (data.isRight()) {
-      emit(state.copyWith(
-          status: QuestionAttributeStatus.success,));
-    } else {
+    try {
+      var addResult = await questionAttributeRepository.addQuestionCategory(
+          categoryName: event.categoryName,
+          categoryId: event.categoryId,
+          isActive: event.isActive
+      );
+
+      if (addResult.isRight()) {
+        // Get updated category list after successful addition
+        var updatedCategories = await questionAttributeRepository.getQuestionCategory();
+
+        if (updatedCategories.isRight()) {
+          emit(state.copyWith(
+            status: QuestionAttributeStatus.success,
+            categoryList: updatedCategories.right,
+          ));
+        } else {
+          emit(state.copyWith(
+              status: QuestionAttributeStatus.error,
+              errorMessage: updatedCategories.left.message
+          ));
+        }
+      } else {
+        emit(state.copyWith(
+            status: QuestionAttributeStatus.error,
+            errorMessage: addResult.left.message
+        ));
+      }
+    } catch (e) {
       emit(state.copyWith(
           status: QuestionAttributeStatus.error,
-          errorMessage: data.left.message));
+          errorMessage: e.toString()
+      ));
     }
   }
 

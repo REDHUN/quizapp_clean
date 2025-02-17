@@ -16,10 +16,11 @@ class QuestionAttributeDatasource{
     dataList.map((data) => CategoryModel.fromJson(data)).toList();
     return categoryList;
   }
-  Future<CategoryModel> addQuestionCategory({required String  categoryName, int ? categoryId}) async {
+  Future<CategoryModel> addQuestionCategory({required String  categoryName, int ? categoryId,required bool isActive}) async {
     Map<String,dynamic>queryParameter={
       "category": categoryName,
-      "categoryId" : null
+      "categoryId" : categoryId,
+      "isActive" : isActive?"Y":"N"
     };
     var request = await dio.post("/api/admin/questions/saveCategory",data: queryParameter);
 

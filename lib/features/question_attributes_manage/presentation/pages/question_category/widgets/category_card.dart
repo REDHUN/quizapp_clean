@@ -19,7 +19,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isActive = true;
+    final isActive = category?.isActive=="Y"?true:false;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),

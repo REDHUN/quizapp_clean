@@ -6,7 +6,7 @@ import 'package:game_app/core/model/question_type_model/question_type_model.dart
 
 abstract class QuestionAttributeRepository {
   Future<Either<Failure, List<CategoryModel>>> getQuestionCategory();
-  Future<Either<Failure, CategoryModel>> addQuestionCategory({required String categoryName,int ? categoryId});
+  Future<Either<Failure, CategoryModel>> addQuestionCategory({required String categoryName,int ? categoryId,required bool isActive});
 
   Future<Either<Failure, List<QuestionTypeModel>>> getQuestionType();
 

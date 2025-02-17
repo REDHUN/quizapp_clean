@@ -55,10 +55,10 @@ class QuestionAttributeRepositoryImpl implements QuestionAttributeRepository {
 
   @override
   Future<Either<Failure, CategoryModel>> addQuestionCategory(
-      {required String categoryName,  int  ? categoryId}) async {
+      {required String categoryName,  int  ? categoryId,required bool isActive}) async {
     try {
       final request = await questionCategoryDatasource.addQuestionCategory(
-          categoryName: categoryName, categoryId: categoryId);
+          categoryName: categoryName, categoryId: categoryId,isActive: isActive);
 
       return Either.right(request);
     } on DioException catch (e) {

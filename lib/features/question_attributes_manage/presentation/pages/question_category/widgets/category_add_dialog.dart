@@ -15,7 +15,7 @@ class CategoryAddDialog extends StatefulWidget {
 
 class _CategoryAddDialogState extends State<CategoryAddDialog> {
   final TextEditingController _categoryController = TextEditingController();
-  bool _isActive = true;
+  bool _isActive = false;
 
   @override
   void dispose() {
@@ -169,6 +169,8 @@ class _CategoryAddDialogState extends State<CategoryAddDialog> {
 
   Widget _buildActionButtons(BuildContext context, bool isDark) {
     return BlocBuilder<QuestionAttributeBloc, QuestionAttributeState>(
+      buildWhen: (previous, current) =>
+      previous.status != current.status, // Only rebuild on status change
       builder: (context, state) {
         final isLoading = state.status == QuestionAttributeStatus.loading;
 
@@ -176,7 +178,8 @@ class _CategoryAddDialogState extends State<CategoryAddDialog> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextButton(
-              onPressed: isLoading ? null : () => Navigator.pop(context),
+              // Cancel button should always be enabled
+              onPressed: () => Navigator.pop(context),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -210,6 +213,7 @@ class _CategoryAddDialogState extends State<CategoryAddDialog> {
                   AddQuestionCategory(
                     categoryName: _categoryController.text.trim(),
                     categoryId: null,
+                    isActive: _isActive,
                   ),
                 );
               },

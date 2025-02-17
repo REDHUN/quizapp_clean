@@ -7,8 +7,9 @@ class GetQuestionCategory extends QuestionAttributeEvent {
 class AddQuestionCategory extends QuestionAttributeEvent {
   final String categoryName;
   final int ? categoryId;
+  final bool isActive;
 
-  AddQuestionCategory({required this.categoryName,  this.categoryId});
+  AddQuestionCategory({required this.categoryName,  this.categoryId,required this.isActive});
 
 }
 class GetQuestionDifficulty extends QuestionAttributeEvent {

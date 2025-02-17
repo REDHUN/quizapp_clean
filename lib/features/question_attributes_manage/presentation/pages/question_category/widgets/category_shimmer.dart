@@ -15,7 +15,7 @@ class CategoryShimmer extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: 4,
+              itemCount: 20,
               itemBuilder: (context, index) => _buildCardShimmer(),
             ),
           ),

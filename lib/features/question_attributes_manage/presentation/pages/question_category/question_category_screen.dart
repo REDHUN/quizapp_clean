@@ -24,107 +24,104 @@ class QuizCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return BlocProvider(
-
-      create: (context) => getIt<QuestionAttributeBloc>()..add(GetQuestionCategory()),
-  child: Scaffold(
-      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
-      appBar: AppBar(
+    return Scaffold(
         backgroundColor: isDark ? Colors.grey[900] : Colors.white,
-        title: Text(
-          'Categories',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
-        ),
-        elevation: 0,
-        iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, size: 28),
-            onPressed: () {},
-          ),
-        ],
-      ),
-
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddDialog(context),
-        backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add_circle_outline),
-        label: Text(
-          'New Category',
-          style:  TextStyle(fontWeight: FontWeight.w500),
-        ),
-      ),
-      body: BlocSelector<QuestionAttributeBloc,QuestionAttributeState,( QuestionAttributeStatus, List<CategoryModel>?, )>(
-  selector: (state)=> (
-    state.status,
-    state.categoryList,
-  ),
-  builder: (context, state) {
-    final (status, categories,) = state;
-    if (status == QuestionAttributeStatus.loading) {
-      return const Center(
-        child: CategoryShimmer(),
-      );
-    }
-    else if(status == QuestionAttributeStatus.success){
-      return Column(
-        children: [
-          CategoryHeader(
-            totalCategories: _dummyCategories.length,
-            activeCategories:
-            _dummyCategories.where((c) => c['isActive']).length,
-            totalQuestions: _dummyCategories.fold(
-                0, (sum, item) => sum + (item['questionCount'] as int)),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount:categories?.length??0,
-              itemBuilder: (context, index) {
-                final category =categories?[index];
-                return CategoryCard(
-                  category: category,
-                  onToggle: _toggleCategory,
-                  onEdit: _showEditDialog,
-                  onDelete: _showDeleteDialog,
-                );
-              },
+        appBar: AppBar(
+          backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+          title: Text(
+            'Categories',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
             ),
           ),
-        ],
+          elevation: 0,
+          iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search, size: 28),
+              onPressed: () {},
+            ),
+          ],
+        ),
+
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _showAddDialog(context),
+          backgroundColor: AppColors.primary,
+          icon: const Icon(Icons.add_circle_outline),
+          label: Text(
+            'New Category',
+            style:  TextStyle(fontWeight: FontWeight.w500),
+          ),
+        ),
+        body: BlocBuilder<QuestionAttributeBloc, QuestionAttributeState>(
+          buildWhen: (previous, current) =>
+          // Only rebuild for initial load or when category list changes
+          previous.categoryList != current.categoryList ||
+              (previous.status == QuestionAttributeStatus.initial &&
+                  current.status == QuestionAttributeStatus.loading),
+          builder: (context, state) {
+            if (state.status == QuestionAttributeStatus.loading &&
+                state.categoryList == null) {
+              return const Center(
+                child: CategoryShimmer(),
+              );
+            }
+
+            final categories = state.categoryList ?? [];
+            return Column(
+              children: [
+                CategoryHeader(
+                  totalCategories: categories.length,
+                  activeCategories: categories.where((c) => c.isActive == "Y").length,
+                  totalQuestions: 0,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return CategoryCard(
+                        category: category,
+                        onToggle: _toggleCategory,
+                        onEdit: _showEditDialog,
+                        onDelete: _showDeleteDialog,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       );
-    }
-   else{
-      return const Center(
-        child: CategoryShimmer(),
-      );
-    }
-  },
-),
-    ),
-);
   }
 
-  void _showAddDialog(BuildContext context) {
-    showDialog(
+  void _showAddDialog(BuildContext context) async {
+    final bloc = context.read<QuestionAttributeBloc>();
+    await showDialog(
       context: context,
       barrierColor: Colors.black45,
-      builder: (context) => const CategoryAddDialog(),
+      builder: (dialogContext) => BlocProvider.value(
+        value: bloc, // Use the same bloc instance
+        child:  CategoryAddDialog(),
+      ),
     );
   }
 
-  void _showEditDialog(BuildContext context,CategoryModel ? category) {
-    showDialog(
+  void _showEditDialog(BuildContext context, CategoryModel? category) async {
+    final bloc = context.read<QuestionAttributeBloc>();
+    await showDialog(
       context: context,
       barrierColor: Colors.black45,
-      builder: (context) => CategoryEditDialog(category: category),
+      builder: (dialogContext) => BlocProvider.value(
+        value: bloc, // Use the same bloc instance
+        child: CategoryEditDialog(category: category),
+      ),
     );
   }
-
   void _showDeleteDialog(BuildContext context, CategoryModel ? category) {
     showDialog(
       context: context,
@@ -212,6 +209,6 @@ class QuizCategoryScreen extends StatelessWidget {
 
   void _toggleCategory(
       BuildContext context, CategoryModel ? category, bool value) {
-    // Toggle category active status logic here
+
   }
 }

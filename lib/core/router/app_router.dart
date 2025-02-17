@@ -1,6 +1,10 @@
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app/core/di/get_it.dart';
 import 'package:game_app/features/auth/presentation/pages/auth_page.dart';
 import 'package:game_app/features/create_quiz/presentation/pages/create_quiz_screen.dart';
+import 'package:game_app/features/question_attributes_manage/presentation/bloc/question_attribute_bloc.dart';
+import 'package:game_app/features/question_attributes_manage/presentation/bloc/question_attribute_event.dart';
 import 'package:game_app/features/question_attributes_manage/presentation/pages/question_attribute_manage_screen.dart';
 import 'package:game_app/features/question_attributes_manage/presentation/pages/question_category/question_category_screen.dart';
 import 'package:game_app/features/question_manegement/presentation/pages/question_manage/question_create/create_question_screen.dart';
@@ -92,9 +96,10 @@ class AppRouter {
     ),
     GoRoute(
       path: QuizCategoryScreen.route,
-      builder: (context, state) {
-        return QuizCategoryScreen();
-      },
+      builder: (context, state) => BlocProvider(
+        create: (context) => getIt<QuestionAttributeBloc>()..add(GetQuestionCategory()),
+        child: QuizCategoryScreen(),
+      ),
     ),
   ]);
 }
