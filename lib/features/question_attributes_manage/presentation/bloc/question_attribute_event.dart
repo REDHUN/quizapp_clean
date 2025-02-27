@@ -12,7 +12,16 @@ class AddQuestionCategory extends QuestionAttributeEvent {
   AddQuestionCategory({required this.categoryName,  this.categoryId,required this.isActive});
 
 }
+class DeleteCategory extends QuestionAttributeEvent {
+  final int ? categoryId;
+  DeleteCategory({this.categoryId});
+}
+class IsCategoryUsed extends QuestionAttributeEvent {
+  final int ? categoryId;
+  IsCategoryUsed({this.categoryId});
+}
 class GetQuestionDifficulty extends QuestionAttributeEvent {
+
   GetQuestionDifficulty();
 }
 

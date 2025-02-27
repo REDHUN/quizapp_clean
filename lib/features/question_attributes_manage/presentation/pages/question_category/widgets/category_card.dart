@@ -70,31 +70,17 @@ class CategoryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 4),
-                // Container(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey.withOpacity(0.1),
-                //     borderRadius: BorderRadius.circular(6),
-                //   ),
-                //   child: Text(
-                //     '${category['questionCount']} Questions',
-                //     style:  TextStyle(
-                //       fontSize: 12,
-                //       color: Colors.black54,
-                //     ),
-                //   ),
-                // ),
+
               ],
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Switch.adaptive(
-                  value: isActive,
-                  onChanged: (value) => onToggle(context, category, value),
-                  activeColor: AppColors.primary,
-                ),
+                // Switch.adaptive(
+                //   value: isActive,
+                //   onChanged: (value) => onToggle(context, category, value),
+                //   activeColor: AppColors.primary,
+                // ),
                 _buildIconButton(
                   icon: Icons.edit_outlined,
                   color: AppColors.primary,

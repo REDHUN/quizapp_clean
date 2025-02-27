@@ -9,6 +9,7 @@ enum QuestionAttributeStatus {
   success,
   error,
   categoryAdding
+
 }
 
 class QuestionAttributeState extends Equatable {
@@ -17,6 +18,8 @@ class QuestionAttributeState extends Equatable {
   final List<CategoryModel>? categoryList;
   final List<DifficultyModel>? questionDifficultyList;
   final List<QuestionTypeModel>? questionTypeList;
+  final bool ? isCategoryUsed;
+
 
   const QuestionAttributeState._({
     required this.status,
@@ -24,6 +27,7 @@ class QuestionAttributeState extends Equatable {
     this.categoryList,
     this.questionTypeList,
     this.questionDifficultyList,
+    this.isCategoryUsed
   });
 
   factory QuestionAttributeState.initial() => const QuestionAttributeState._(
@@ -36,6 +40,7 @@ class QuestionAttributeState extends Equatable {
     List<CategoryModel>? categoryList,
     List<DifficultyModel>? questionDifficultyList,
     List<QuestionTypeModel>? questionTypeList,
+ bool ? isCategoryUsed,
   }) {
     return QuestionAttributeState._(
       status: status ?? this.status,
@@ -44,6 +49,7 @@ class QuestionAttributeState extends Equatable {
       questionDifficultyList:
       questionDifficultyList ?? this.questionDifficultyList,
       questionTypeList: questionTypeList ?? this.questionTypeList,
+      isCategoryUsed: isCategoryUsed??this.isCategoryUsed
     );
   }
 
@@ -54,5 +60,6 @@ class QuestionAttributeState extends Equatable {
     categoryList,
     questionDifficultyList,
     questionTypeList,
+    isCategoryUsed
   ];
 }

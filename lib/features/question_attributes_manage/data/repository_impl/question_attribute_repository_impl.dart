@@ -55,16 +55,51 @@ class QuestionAttributeRepositoryImpl implements QuestionAttributeRepository {
 
   @override
   Future<Either<Failure, CategoryModel>> addQuestionCategory(
-      {required String categoryName,  int  ? categoryId,required bool isActive}) async {
+      {required String categoryName,
+      int? categoryId,
+      required bool isActive}) async {
     try {
       final request = await questionCategoryDatasource.addQuestionCategory(
-          categoryName: categoryName, categoryId: categoryId,isActive: isActive);
+          categoryName: categoryName,
+          categoryId: categoryId,
+          isActive: isActive);
 
       return Either.right(request);
     } on DioException catch (e) {
       return Either.left(DioErrorHandler.handleDioError(e));
     } on Exception catch (e) {
       return Either.left(AuthFailure(message: "Add question category error"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteQuestionCategory(
+      {int? categoryId}) async {
+    try {
+      final request = await questionCategoryDatasource.deleteCategory(
+          categoryId: categoryId);
+
+      return Either.right(request);
+    } on DioException catch (e) {
+      return Either.left(DioErrorHandler.handleDioError(e));
+    } on Exception catch (e) {
+      return Either.left(
+          AuthFailure(message: "Delete question category error"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> isCategoryUser({int? categoryId}) async {
+    try {
+      final request = await questionCategoryDatasource.isCategoryUser(
+          categoryId: categoryId);
+
+      return Either.right(request);
+    } on DioException catch (e) {
+      return Either.left(DioErrorHandler.handleDioError(e));
+    } on Exception catch (e) {
+      return Either.left(
+          AuthFailure(message: "get question category status error"));
     }
   }
 }
